@@ -4,6 +4,8 @@
  */
 package sistemregistrocivil;
 
+import java.io.IOException;
+
 /**
  *
  * @author crist
@@ -13,8 +15,9 @@ public class SistemRegistroCivil {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-        // TODO code application logic here
+    public static void main(String[] args) throws IOException {
+        Menu consoleichon = new Menu();
+        consoleichon.consolaP();
     }
     
 }
