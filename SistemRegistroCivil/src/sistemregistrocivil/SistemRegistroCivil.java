@@ -14,6 +14,7 @@ public class SistemRegistroCivil {
 
     /**
      * @param args the command line arguments
+     * @throws java.io.IOException
      */
     public static void main(String[] args) throws IOException {
         RegistroCivil rc = new RegistroCivil();
@@ -30,7 +31,7 @@ public class SistemRegistroCivil {
         
         int id = 1;
         for (String nombre : sucursales) {
-            Ubicacion ubi = new Ubicacion();
+            Ubicacion ubi = new Ubicacion(nombre, nombre, nombre, nombre);
             Sucursal suc = new Sucursal(id, nombre, ubi);
             rc.agregarSucursal(nombre, suc); // <-- ver parche abajo
             ++id;
@@ -68,6 +69,7 @@ public class SistemRegistroCivil {
             fn.setAño(anio);
 
             Persona p = new Persona();
+            p.setNombre(nombre);
             p.setRut(rut);
             p.setFechaN(fn);
             p.setEstado(true);

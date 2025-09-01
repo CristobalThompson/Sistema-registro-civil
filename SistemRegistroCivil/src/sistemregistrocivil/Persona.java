@@ -40,7 +40,7 @@ public class Persona {
     public boolean setEstadoCivil(String estado){
         if (estado == null) return false;
         estadoCivil = estado;
-        return true
+        return true;
     }
     
     public boolean setFechaDefuncion(Fecha fd){
