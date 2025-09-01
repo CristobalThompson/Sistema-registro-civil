@@ -37,8 +37,10 @@ public class Persona {
         estadoPersona = estado;
     }
     
-    public void setEstadoCivil(String estado){
+    public boolean setEstadoCivil(String estado){
+        if (estado == null) return false;
         estadoCivil = estado;
+        return true
     }
     
     public boolean setFechaDefuncion(Fecha fd){

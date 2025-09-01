@@ -78,8 +78,8 @@ public class Archivo {
     //-----------------------------------------
     
     private boolean esCasado(){
-        if (persona.getEstadoCivil() == null) return false;
-        if ((persona.getEstadoCivil()).equals("Casado/a")) return true;
+        if (persona.getCivil() == null) return false;
+        if ((persona.getCivil()).equals("Casado/a")) return true;
         
         return false;
         
