@@ -9,8 +9,7 @@ package sistemregistrocivil;
  *
  * @author crist
  */
-import java.util.*;
-import sistemregistrocivil.Ubicacion;
+
 import java.util.*;
 
 public class Sucursal {
@@ -74,7 +73,8 @@ public class Sucursal {
     }
     
     public Archivo getArchivo(String rut){
-        return this.archivos.getClass(rut);
+        if (rut == null) return null;
+        return this.archivos.get(rut);
     }
     
     public String getNombre(){
