@@ -59,7 +59,17 @@ public class RegistroCivil {
         System.out.println("Nacimiento registrado en sucursal: " + nombreSucursal);
         return true;
     }
+    
+    public Persona buscarPersona(String nombreS, String rut) {
+        if (nombreS == null || rut == null) return null;
 
+        Sucursal suc = sucursales.get(nombreS);
+        if (suc == null) return null;
+
+        Archivo personaEnSucursal = suc.getArchivo(rut);
+        if (personaEnSucursal == null) return null;
+        return personaEnSucursal.getPersona(); // devuelve null si no existe
+}
     public Persona buscarPersona(String rut) {
         return listaPersonas.get(rut);
     }
