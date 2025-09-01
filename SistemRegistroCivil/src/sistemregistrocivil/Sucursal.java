@@ -20,7 +20,7 @@ public class Sucursal {
     
     //Constructores
     
-    public void Sucursal(int iD, String name,Ubicacion location){
+    public Sucursal(int iD, String name,Ubicacion location){
         this.id = iD;
         this.nombre = name;
         this.ubicacion = location;
