@@ -9,116 +9,130 @@ package sistemregistrocivil;
  *
  * @author franc
  */
-import java.io.*;
-public class Menu {
+import javax.swing.*;
+import java.awt.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionListener;
+
+public class Menu extends JFrame {
+    private final RegistroCivil rc;
+    private boolean datosCargados = false;
     
-    void consolaP()throws IOException{
-        String nume;
-        BufferedReader lector = new BufferedReader(new InputStreamReader(System.in));
-        do{
-            mostrarMenuPrincipal();
-            nume = lector.readLine();
-            switch(nume){
-                case "1":
-                    break;
-                case "2":
-                    break;
-                case "3":
-                    consolaT();
-                    break;
-                case "4":
-                    consolaC();
-                    break;
-                case "5":
-                    break;
-                case "6":
-                    System.out.println("Saliendo del programa...");
-                    break;
-                default:
-                    System.out.println("Opción inválida.");
-            }
-        }while(!"6".equals(nume));
+    private final JButton btnCargar = new JButton("Cargar datos");
+    private final JButton btnSucursales = new JButton("Mostrar Sucursales");
+    private final JButton btnCertificados = new JButton("Certificados");
+    private final JTable tabla = new JTable();
+    private final DefaultTableModel modeloTabla =
+            new DefaultTableModel(new Object[]{"ID", "Nombre", "Ciudad"}, 0);
+    
+    public Menu(RegistroCivil rc){
+        super("Registro Civil");
+        this.rc = rc;
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setSize(700, 400);
+        setLocationRelativeTo(null);
+        setLayout(new BorderLayout());
+        
+        JPanel barra = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        barra.add(btnCargar);
+        barra.add(btnSucursales);
+        barra.add(btnCertificados);
+        add(barra, BorderLayout.NORTH);
+        
+        tabla.setModel(modeloTabla);
+        add(new JScrollPane(tabla), BorderLayout.CENTER);
+        
+        btnCargar.addActionListener(e -> cargarDatos());
+        btnSucursales.addActionListener(e -> cargarTablaSucursales());
+        btnCertificados.addActionListener(e -> abrirSubmenuCertificados());
+        
+        UIManager.put("OptionPane.okButtonText", "OK");
+        UIManager.put("OptionPane.cancelButtonText", "Cancelar");
     }
     
-    void consolaT()throws IOException{
-        String nume;
-        BufferedReader lector = new BufferedReader(new InputStreamReader(System.in));
-        do{
-            mostrarTramites();
-            nume = lector.readLine();
-            switch(nume){
-                case "1":
-                    break;
-                case "2":
-                    break;
-                case "3":
-                    break;
-                case "4":
-                    break;
-                case "5":
-                    System.out.println("Volviendo al menú principal...");
-                    break;
-                default:
-                    System.out.println("Opción inválida.");
-            }
-        }while(!"5".equals(nume));
+    public void mostrar(){
+        setVisible(true);
     }
     
-    void consolaC()throws IOException{
-        String nume;
-        BufferedReader lector = new BufferedReader(new InputStreamReader(System.in));
-        do{
-            mostrarCertificados();
-            nume = lector.readLine();
-            switch(nume){
-                case "1":
-                    break;
-                case "2":
-                    break;
-                case "3":
-                    break;
-                case "4":
-                    System.out.println("Volviendo al menú principal...");
-                    break;
-                default:
-                    System.out.println("Opción inválida.");
-            }
-        }while(!"4".equals(nume));
+    private void cargarDatos(){
+        if (datosCargados){
+            JOptionPane.showMessageDialog(this, "Los datos ya estaban cargados.");
+            return;
+        }
+        SistemRegistroCivil.leerDatos(rc);
+        datosCargados = true;
+        JOptionPane.showMessageDialog(this, "Datos cargados correctamente.");
     }
     
-    void mostrarMenuPrincipal(){
-        System.out.println("- - - - - - - - - - - - - - -");
-        System.out.println("         Menú Principal");
-        System.out.println("- - - - - - - - - - - - - - -");
-        System.out.println("Seleccione la opción que desee");
-        System.out.println("1) Cargar datos csv. (solo una vez)");
-        System.out.println("2) Mostrar sucursales.");
-        System.out.println("3) Trámites.");
-        System.out.println("4) Obtener certificado.");
-        System.out.println("5) Actualizar datos del registro.");
-        System.out.println("6) Salir");
+    private void cargarTablaSucursales(){
+        DefaultTableModel m = (DefaultTableModel) tabla.getModel();
+        
+        m.setRowCount(0);
+        m.setColumnIdentifiers(new Object[]{"ID", "Nombre", "Ciudad"});
+        
+        map();
         
     }
-    void mostrarTramites(){
-        System.out.println("- - - - - - - - - - - - - - -");
-        System.out.println("       Menú de Trámites");
-        System.out.println("- - - - - - - - - - - - - - -");
-        System.out.println("Seleccione el tipo de trámite que desea realizar");
-        System.out.println("1) Nacimiento.");
-        System.out.println("2) Defunción");
-        System.out.println("3) Matrimonio");
-        System.out.println("4) Divorcio");
-        System.out.println("5) Atrás.");
+    
+    private void map(){
+        DefaultTableModel m = (DefaultTableModel) tabla.getModel();
+        java.util.Map<String, Sucursal> mapa = rc.getSucursales(); // <- tu método real
+
+        if (mapa == null || mapa.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "No hay sucursales cargadas.");
+            return;
+        }
+        for (Sucursal s : mapa.values()) {
+            m.addRow(new Object[]{
+                s.getID(),
+                s.getNombre(),
+                s.getUbicacion().getCiudad()
+            });
+        }
     }
     
-    void mostrarCertificados(){
-        System.out.println("- - - - - - - - - - - - - - -");
-        System.out.println("    Menú de Certificados");
-        System.out.println("- - - - - - - - - - - - - - -");
-        System.out.println("Seleccione el certificado que desee.");
-        System.out.println("1) Certificado de Matriminio");
-        System.out.println("2) Certificado de Nacimiento");
-        System.out.println("3) Certificado de Defución");
-        System.out.println("4) Volver.");
+    private void abrirSubmenuCertificados(){
+        String[] ops = {"Emitir", "Listar", "Cerrar"};
+        String op = (String) JOptionPane.showInputDialog(
+            this, "Elige", "Certificados",
+            JOptionPane.QUESTION_MESSAGE, null, ops, ops[0]);
+        if (op == null || op.equals("Cerrar")) return;
+        
+        switch(op){
+            case "Emitir" :
+                emitirCertificadoUI();
+                break;
+            case "Listar" :
+                listarCertificadosUI();
+                break;
+        }
+    }
+    
+    private void emitirCertificadoUI(){
+        JTextField rut = new JTextField();
+        JTextField tipo = new JTextField();
+        
+        JPanel panel = new JPanel(new GridLayout(0,1));
+        panel.add(new JLabel("RUT:"));
+        panel.add(rut);
+        panel.add(new JLabel("Tipo:"));
+        panel.add(tipo);
+        
+        int ok = JOptionPane.showConfirmDialog(this, panel, "Emitir Certificado",
+                                               JOptionPane.OK_CANCEL_OPTION);
+        if (ok == JOptionPane.OK_OPTION) {
+            // rc.emitirCertificado(rut.getText(), tipo.getText());
+            JOptionPane.showMessageDialog(this, "Certificado emitido (demo).");
+        }
+    }
+    
+    private void listarCertificadosUI(){
+        
+        DefaultTableModel m = new DefaultTableModel(new Object[]{"Folio","RUT","Tipo","Fecha"}, 0);
+        
+        
+        m.addRow(new Object[]{123, "11.111.111-1", "Nacimiento", "2025-09-19"});
+        JTable t = new JTable(m);
+        JOptionPane.showMessageDialog(this, new JScrollPane(t), "Certificados", JOptionPane.PLAIN_MESSAGE);
     }
 }

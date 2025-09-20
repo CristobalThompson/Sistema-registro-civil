@@ -16,47 +16,56 @@ public class RegistroCivil {
     
     private HashMap<String, Sucursal> sucursales = new HashMap<>();
     private HashMap<String, Persona> listaPersonas = new HashMap<>();
-    
+    private ArrayList<String> clavesSucursales = new ArrayList<>();
 
+    
+    public int getTotalClaves(){
+        return clavesSucursales.size();
+    }
+    
+    public Sucursal getSucursal(String key){
+        return sucursales.get(key);
+    }
+    
+    public HashMap<String, Sucursal> getSucursales(){
+        return sucursales;
+    }
+    
+    public String getClave(int i){
+        return clavesSucursales.get(i);
+    }
+    
     private boolean validarRut(String rut) {
         return listaPersonas.containsKey(rut);
     }
     
-    public void agregarSucursal(String nombreSucursal, Sucursal sucursal) {
-    if (sucursales.containsKey(nombreSucursal)) {
-        System.out.println("La sucursal '" + nombreSucursal + "' ya existe.");
-    } else {
-        sucursales.put(nombreSucursal, sucursal);
-        System.out.println("Sucursal '" + nombreSucursal + "' agregada correctamente.");
-        }
+    public boolean agregarSucursal(String nombreSucursal, Sucursal sucursal) {
+    if (sucursales.containsKey(nombreSucursal)) return false;
+    
+    clavesSucursales.add(nombreSucursal);
+    sucursales.put(nombreSucursal, sucursal);
+    return true;
     }
     
     //Verificar nacimiento
     public boolean nacimiento(Persona persona, String nombreSucursal) {
-        if (validarRut(persona.getRut())) {
-            System.out.println("El RUT ya está registrado.");
-            return false;
-        }
+        if (validarRut(persona.getRut())) return false;
+        
 
-        listaPersonas.put(persona.getRut(), persona);
+        listaPersonas.put(persona.getRut(), persona); //agregar persona a la
+        // lista total de personas
 
+                                                     
         Sucursal suc = sucursales.get(nombreSucursal);
-        if (suc != null) {
-            Archivo archivo = new Archivo();
-            boolean asignado = archivo.setPersona(persona);
+        if (suc == null) return false;
+        
+        
+        Archivo archivo = new Archivo();
+        boolean asignado = archivo.setPersona(persona);
 
-            if (!asignado) {
-                System.out.println("Error al asignar la persona al archivo.");
-                return false;
-            }
-
-            suc.agregarArchivo(nombreSucursal,archivo);
-        } else {
-            System.out.println("Sucursal no encontrada: " + nombreSucursal);
-            return false;
-        }
-
-        System.out.println("Nacimiento registrado en sucursal: " + nombreSucursal);
+        if (!asignado) return false;
+       
+        suc.agregarArchivo(nombreSucursal,archivo);
         return true;
     }
     
@@ -73,18 +82,8 @@ public class RegistroCivil {
     public Persona buscarPersona(String rut) {
         return listaPersonas.get(rut);
     }
-    //Mostrar los documentos del rut solicitado
-    public void mostrarDocumento(String rut) {
-        Persona persona = buscarPersona(rut);
-        if (persona != null) {
-            persona.mostrarDatos();
-        } else {
-            System.out.println("Persona no encontrada.");
-        }
-    }
 
     public void leerDatos(Persona persona, String nombreSucursal) {
         nacimiento(persona, nombreSucursal);
     }
-
 }

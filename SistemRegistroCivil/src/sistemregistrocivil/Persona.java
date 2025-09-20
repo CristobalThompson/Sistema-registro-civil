@@ -72,30 +72,5 @@ public class Persona {
     
     public Fecha getDefuncion(){
         return defuncion; 
- 
-    }
-    
-    public void mostrarDatos(){
-        System.out.println("\n---------------------------------------------------------------");
-        System.out.println("\nDatos de la persona: ");
-        System.out.println("- NOMBRE: " + (nombre != null ? nombre : "No declarado."));
-        System.out.println("- RUT: " + (rut != null ? rut : "No declarado."));
-        
-        if (fechaNacimiento != null){
-            System.out.println("- FECHA DE NACIMIENTO: " + 
-                fechaNacimiento.getDia() + "/" + fechaNacimiento.getMes() + "/"
-                + fechaNacimiento.getAño());
-        }
-        else{
-            System.out.println("- FECHA DE NACIMIENTO: No declarado.");
-        }
-        if(!estadoPersona && defuncion != null){
-        
-            System.out.println("- FECHA DE FALLECIMIENTO: " + defuncion.getDia()
-                + "/" + defuncion.getMes() + "/" + defuncion.getAño());
-        }
-        
-        System.out.println("- ESTADO CIVIL: " + (estadoCivil != null ? estadoCivil : "No declarado."));
-        System.out.println("\n---------------------------------------------------------------");
     }
 }

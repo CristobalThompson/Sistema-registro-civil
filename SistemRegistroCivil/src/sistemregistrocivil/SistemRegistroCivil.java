@@ -1,26 +1,19 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
- */
+
 package sistemregistrocivil;
 
 import java.io.IOException;
-
 /**
  *
  * @author crist
  */
 public class SistemRegistroCivil {
 
-    /**
-     * @param args the command line arguments
-     * @throws java.io.IOException
-     */
     public static void main(String[] args) throws IOException {
-        RegistroCivil rc = new RegistroCivil();
-        leerDatos(rc);
-        Menu consoleichon = new Menu();
-        consoleichon.consolaP();
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            RegistroCivil rc = new RegistroCivil();
+            Menu consoleichon = new Menu(rc);
+            consoleichon.mostrar();
+        });
     }
  
     public static void leerDatos(RegistroCivil rc){

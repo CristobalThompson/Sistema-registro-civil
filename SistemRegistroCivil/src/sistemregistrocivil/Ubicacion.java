@@ -23,14 +23,6 @@ public class Ubicacion {
         this.direccion = direccion;
     }
 
-    //Mostrar Datos
-    public void Mostrar() {
-        System.out.println("Región: " + region);
-        System.out.println("Ciudad: " + ciudad);
-        System.out.println("Comuna: " + comuna);
-        System.out.println("Dirección: " + direccion);
-    }
-
     // Getters
     public String getRegion() {
         return region;

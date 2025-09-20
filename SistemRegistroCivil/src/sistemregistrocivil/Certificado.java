@@ -11,7 +11,7 @@ package sistemregistrocivil;
  */
 public class Certificado {
     private Persona persona;
-    private Persona conyuge;
+    private Archivo conyuge;
     private Fecha fechaCasamiento;
     private byte tipoCertificado;
     private String nombreCertificado;
@@ -25,6 +25,13 @@ public class Certificado {
     public boolean setFechaC(Fecha fc){
         if(fc == null) return false;
         fechaCasamiento = fc;
+        return true;
+    }
+    
+    public boolean setConyuge(Archivo c){
+        if (c == null) return false;
+        
+        conyuge = c;
         return true;
     }
     

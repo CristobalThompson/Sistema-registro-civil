@@ -38,17 +38,6 @@ public class Sucursal {
         return this.archivos.remove(key,value);
     }
     
-    public void mostrarSucursal(){
-        System.out.println("- - - - - - - - - - - - - -");
-        System.out.println("Sucursal: "+this.nombre);
-        System.out.println("- - - - - - - - - - - - - -");
-        System.out.println("- iD:" + this.id);
-        System.out.println("- Ubicación:");
-        System.out.println(""); //pendiente añadir los datos de ubición con gets.
-        System.out.println("");
-        System.out.println("");
-    }
-    
     //Métodos sets
     
     public boolean setID(int nuevo){

@@ -43,9 +43,4 @@ public class Fecha {
     void setAño(int nuevoAño) {
         año = nuevoAño;
     }
-
-    // Muestra la fecha
-    void mostrarFecha() {
-        System.out.println(dia + "/" + mes + "/" + año);
-    }
 }

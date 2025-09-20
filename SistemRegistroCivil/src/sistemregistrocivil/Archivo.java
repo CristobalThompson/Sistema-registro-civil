@@ -88,46 +88,35 @@ public class Archivo {
     public boolean casarse(Archivo pp, Fecha ff){
         
         if (pp == null || ff == null){ //verificar parametros sean utiles
-            System.out.println("Parametros invalidos (null)");
             return false;
         }
         
         if(this.persona == null || pp.getPersona() == null){ //evitar errores
-            System.out.println("Algun archivo no tiene registro de la persona");
             return false;
         }
         
-        if ( this.esCasado() || pp.esCasado() ){ //verificar que no este casado ya alguno
-            
-            System.out.println("Ya se encuentra casado alguno!");
+        if ( this.esCasado() || pp.esCasado() ) //verificar que no este casado ya alguno
             return false;
-        }
         
-        if (this.persona == pp.getPersona()){
-            System.out.println("No puedes casarte contigo mismo");
-            return false;
-        }
+        
+        if (this.persona == pp.getPersona()) return false;
+        
         
         
         if (!this.setConyuge(pp) || 
-            !pp.setConyuge(this)){ //asignar conyuge aqui
-            
-            System.out.println("No se pudo asignar conyuge a alguno");
+            !pp.setConyuge(this)) //asignar conyuge aqui
             return false;
-        }
+        
         
         if(!persona.setEstadoCivil("Casado/a") ||
-           !(pp.getPersona()).setEstadoCivil("Casado/a") ){ //establecer casado
-            System.out.println("No se pudo asignar el estado civil a alguno");
+           !(pp.getPersona()).setEstadoCivil("Casado/a") ) //establecer casado
             return false;
-        }
         
         
         if(!this.setFechaCasamiento(ff) ||
-           !pp.setFechaCasamiento(ff)){ //asignamos fecha de casamiento a ambos
-            System.out.println("No se pudo asignar fecha de casamiento a alguno");
+           !pp.setFechaCasamiento(ff)) //asignamos fecha de casamiento a ambos
             return false;
-        }
+        
         
         //Se caso correctamente
         return true;
@@ -164,16 +153,11 @@ public class Archivo {
     
     public Certificado generarCertificado(byte opcion){
         
-        if (opcion != 1 && opcion != 2 && opcion != 3){
-            System.out.println("Opcion invalida, retornando null");
-            return null;
-        }
+        if (opcion != 1 && opcion != 2 && opcion != 3) return null;
         
-        if (opcion == 1 && !this.esCasado()){
-            System.out.println("No puedes generar un certificado de matrimonio");
-            System.out.println("sin casarte primero");
-            return null;
-        }
+        
+        if (opcion == 1 && !this.esCasado()) return null;
+        
         
         
         
@@ -185,27 +169,9 @@ public class Archivo {
         
         if (certificado.crearCertificado(opcion)){
             certificados.add(certificado);
-            System.out.println("Certificado generado correctamente");
             return certificado;
         }
-        System.out.println("No se pudo generar el certificado");
         return null;
         
     }
-    
-    public void listarCertificado(){
-        if(certificados.isEmpty()){
-            System.out.println("No hay certificados para mostrar");
-            return;
-        }
-        
-        System.out.println("---------------------------------------------");
-        System.out.println("            Listas de certificados");
-        System.out.println("---------------------------------------------\n");
-        for(int k = 0; k < certificados.size(); ++k){
-            Certificado c = certificados.get(k);
-            System.out.println("certificado " + (k+1) + ": " + c.getNombre());
-        }
-    }
 }
-
