@@ -18,35 +18,38 @@ public class Menu extends JFrame {
     private final RegistroCivil rc;
     private boolean datosCargados = false;
     
-    private final JButton btnCargar = new JButton("Cargar datos");
+    private final JButton btnCargar = new JButton("Cargar datos"); //botones
     private final JButton btnSucursales = new JButton("Mostrar Sucursales");
     private final JButton btnCertificados = new JButton("Certificados");
-    private final JTable tabla = new JTable();
+    
+    private final JTable tabla = new JTable(); //tabla para mostrar datos
     private final DefaultTableModel modeloTabla =
             new DefaultTableModel(new Object[]{"ID", "Nombre", "Ciudad"}, 0);
     
     public Menu(RegistroCivil rc){
         super("Registro Civil");
         this.rc = rc;
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(700, 400);
-        setLocationRelativeTo(null);
-        setLayout(new BorderLayout());
         
-        JPanel barra = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        setDefaultCloseOperation(EXIT_ON_CLOSE); //indica que cuando se cierre la ventana, se finalize con exito la ejecucion
+        setSize(700, 400); //fijar el size de la ventana
+        setLocationRelativeTo(null); //centra la ventana en la pantalla
+        setLayout(new BorderLayout()); //divide la ventana en 5 zonas: NORTH, SOUTH, CENTER, EAST, WEST.
+        
+        JPanel barra = new JPanel(new FlowLayout(FlowLayout.LEFT)); //panel para los botones
         barra.add(btnCargar);
         barra.add(btnSucursales);
         barra.add(btnCertificados);
-        add(barra, BorderLayout.NORTH);
+        add(barra, BorderLayout.NORTH); //inserta la barra en la zona north de la ventana
         
         tabla.setModel(modeloTabla);
-        add(new JScrollPane(tabla), BorderLayout.CENTER);
+        add(new JScrollPane(tabla), BorderLayout.CENTER); //agrega la tabla al centro y permite usar scroll del mouse
         
-        btnCargar.addActionListener(e -> cargarDatos());
+        //agregar funcionalidad a los botones cuando se hace click
+        btnCargar.addActionListener(e -> cargarDatos()); //"e ->" expresion lambda
         btnSucursales.addActionListener(e -> cargarTablaSucursales());
         btnCertificados.addActionListener(e -> abrirSubmenuCertificados());
         
-        UIManager.put("OptionPane.okButtonText", "OK");
+        UIManager.put("OptionPane.okButtonText", "OK"); //cambiar los botones a español
         UIManager.put("OptionPane.cancelButtonText", "Cancelar");
     }
     
@@ -76,17 +79,21 @@ public class Menu extends JFrame {
     
     private void map(){
         DefaultTableModel m = (DefaultTableModel) tabla.getModel();
-        java.util.Map<String, Sucursal> mapa = rc.getSucursales(); // <- tu método real
+        java.util.Map<String, Sucursal> mapa = rc.getSucursales();
 
         if (mapa == null || mapa.isEmpty()) {
             JOptionPane.showMessageDialog(this, "No hay sucursales cargadas.");
             return;
         }
-        for (Sucursal s : mapa.values()) {
+        for (int i = 0; i < rc.getTotalClaves(); ++i) {
+            String key = rc.getClave(i);
+            Sucursal suc = rc.getSucursal(key);
+            
+            if(suc == null) continue;
             m.addRow(new Object[]{
-                s.getID(),
-                s.getNombre(),
-                s.getUbicacion().getCiudad()
+                suc.getID(),
+                suc.getNombre(),
+                suc.getUbicacion().getCiudad()
             });
         }
     }
