@@ -12,13 +12,18 @@ package sistemregistrocivil;
 import javax.swing.*;
 import java.awt.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.*;
+
 
 public class Menu extends JFrame {
     private final RegistroCivil rc;
     private GestorCSV gestor;
     private boolean datosCargados = false;
+    private Integer ultimaFilaModelo = null;
     
     private final JButton btnCargar = new JButton("Cargar datos"); //botones
     private final JButton btnSucursales = new JButton("Mostrar Sucursales");
@@ -27,6 +32,10 @@ public class Menu extends JFrame {
     private final JTable tabla = new JTable(); //tabla para mostrar datos
     private final DefaultTableModel modeloTabla =
             new DefaultTableModel(new Object[]{"ID", "Nombre", "Ciudad"}, 0);
+    private final JTable tablaPersonas = new JTable(); //tabla para personas por sucursal
+    private final DefaultTableModel modeloPersonas =
+            new DefaultTableModel(new Object[]{"Rut", "Nombre"}, 0);
+    
     
     public Menu(RegistroCivil rc){
         super("Registro Civil");
@@ -47,8 +56,23 @@ public class Menu extends JFrame {
         add(barra, BorderLayout.NORTH); //inserta la barra en la zona north de la ventana
         
         tabla.setModel(modeloTabla);
-        add(new JScrollPane(tabla), BorderLayout.CENTER); //agrega la tabla al centro y permite usar scroll del mouse
+        tablaPersonas.setModel(modeloPersonas);
         
+        JScrollPane spSuc = new JScrollPane(tabla); //para sucursales
+        JScrollPane spPer = new JScrollPane(tablaPersonas);//para personas de las sucursales
+        
+        JSplitPane split = new JSplitPane(JSplitPane.VERTICAL_SPLIT, spSuc, spPer);
+        split.setResizeWeight(0.65);          // ~65% para sucursales
+        split.setOneTouchExpandable(true);    // botoncitos para colapsar
+        
+        
+        add(split, BorderLayout.CENTER); //agrega las tablas al centro y permite usar scroll del mouse
+        
+        tabla.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()){
+                mostrarPersonasDeSucursalSeleccionada();
+            }
+        });
         
         //agregar funcionalidad a los botones cuando se hace click
         btnCargar.addActionListener(e -> {
@@ -75,6 +99,7 @@ public class Menu extends JFrame {
             return;
         }
         gestor.cargarCsvSucursales(rc);
+        gestor.cargarCsvPersonas(rc);
         datosCargados = true;
         JOptionPane.showMessageDialog(this, "Datos cargados correctamente.");
     }
@@ -109,6 +134,31 @@ public class Menu extends JFrame {
                 suc.getNombre(),
                 suc.getUbicacion().getCiudad()
             });
+        }
+    }
+    
+    private void mostrarPersonasDeSucursalSeleccionada(){
+        int filaVista = tabla.getSelectedRow();
+        if (filaVista < 0){
+            modeloPersonas.setRowCount(0);
+            ultimaFilaModelo = null;
+            return;
+        }
+        
+        int filaModelo = tabla.convertRowIndexToModel(filaVista);
+        
+        if (Objects.equals(ultimaFilaModelo, filaModelo)) return;
+        ultimaFilaModelo = filaModelo;
+        
+        modeloPersonas.setRowCount(0);
+        
+        Sucursal suc = rc.getSucursal(filaModelo);
+        
+        for (int i = 0; i < suc.getTotalArchivos(); ++i){
+            Archivo arc = suc.getArchivo(i);
+            if (arc == null) continue;
+            Persona p = arc.getPersona();
+            modeloPersonas.addRow(new Object[]{p.getRut(), p.getNombre()});
         }
     }
     

@@ -84,7 +84,7 @@ public class RegistroCivil {
        
         listaPersonas.put(persona.getRut(), persona); //agregar persona a la
         rutsPersonas.add(persona.getRut());          // lista total de personas
-        suc.agregarArchivo(nombreSucursal,archivo);
+        suc.agregarArchivo(persona.getRut(),archivo);
         return true;
     }
     
