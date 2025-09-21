@@ -26,7 +26,7 @@ public class SistemRegistroCivil {
         for (String nombre : sucursales) {
             Ubicacion ubi = new Ubicacion(nombre, nombre, nombre, nombre);
             Sucursal suc = new Sucursal(id, nombre, ubi);
-            rc.agregarSucursal(nombre, suc); // <-- ver parche abajo
+            rc.agregarSucursal(nombre, suc);
             ++id;
         }
 

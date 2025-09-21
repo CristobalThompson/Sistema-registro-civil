@@ -13,9 +13,11 @@ import javax.swing.*;
 import java.awt.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 public class Menu extends JFrame {
     private final RegistroCivil rc;
+    private GestorCSV gestor;
     private boolean datosCargados = false;
     
     private final JButton btnCargar = new JButton("Cargar datos"); //botones
@@ -29,11 +31,14 @@ public class Menu extends JFrame {
     public Menu(RegistroCivil rc){
         super("Registro Civil");
         this.rc = rc;
+        gestor = new GestorCSV();
         
         setDefaultCloseOperation(EXIT_ON_CLOSE); //indica que cuando se cierre la ventana, se finalize con exito la ejecucion
         setSize(700, 400); //fijar el size de la ventana
         setLocationRelativeTo(null); //centra la ventana en la pantalla
         setLayout(new BorderLayout()); //divide la ventana en 5 zonas: NORTH, SOUTH, CENTER, EAST, WEST.
+        
+     
         
         JPanel barra = new JPanel(new FlowLayout(FlowLayout.LEFT)); //panel para los botones
         barra.add(btnCargar);
@@ -44,8 +49,15 @@ public class Menu extends JFrame {
         tabla.setModel(modeloTabla);
         add(new JScrollPane(tabla), BorderLayout.CENTER); //agrega la tabla al centro y permite usar scroll del mouse
         
+        
         //agregar funcionalidad a los botones cuando se hace click
-        btnCargar.addActionListener(e -> cargarDatos()); //"e ->" expresion lambda
+        btnCargar.addActionListener(e -> {
+            try{
+                cargarDatos();
+            }catch(IOException ex){
+                JOptionPane.showMessageDialog(this, "No se pudo cargar las sucursales");
+            }}); //"e ->" expresion lambda
+        
         btnSucursales.addActionListener(e -> cargarTablaSucursales());
         btnCertificados.addActionListener(e -> abrirSubmenuCertificados());
         
@@ -57,12 +69,12 @@ public class Menu extends JFrame {
         setVisible(true);
     }
     
-    private void cargarDatos(){
+    private void cargarDatos() throws IOException{
         if (datosCargados){
             JOptionPane.showMessageDialog(this, "Los datos ya estaban cargados.");
             return;
         }
-        SistemRegistroCivil.leerDatos(rc);
+        gestor.cargarCsvSucursales(rc);
         datosCargados = true;
         JOptionPane.showMessageDialog(this, "Datos cargados correctamente.");
     }
@@ -72,6 +84,9 @@ public class Menu extends JFrame {
         
         m.setRowCount(0);
         m.setColumnIdentifiers(new Object[]{"ID", "Nombre", "Ciudad"});
+        tabla.getColumnModel().getColumn(0).setPreferredWidth(40);
+        tabla.getColumnModel().getColumn(0).setMaxWidth(50);
+        tabla.getColumnModel().getColumn(0).setMinWidth(30);
         
         map();
         
