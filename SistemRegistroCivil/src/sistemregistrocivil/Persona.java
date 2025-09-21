@@ -17,6 +17,12 @@ public class Persona {
     private String estadoCivil;
     private Fecha defuncion = null;
     
+    public Persona(String rut, String nombre, Fecha nac){
+        this.rut = rut;
+        this.nombre = nombre;
+        fechaNacimiento = nac;
+    }
+    
     public boolean setRut(String rut){
         if (this.rut != null ||rut == null) return false; //rut no se cambia
         this.rut = rut;

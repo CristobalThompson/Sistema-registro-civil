@@ -17,7 +17,7 @@ public class Sucursal {
     private String nombre;
     private Ubicacion ubicacion;
     private HashMap<String,Archivo> archivos;
-    
+    private ArrayList<String> keys;
     //Constructores
     
     public Sucursal(int iD, String name,Ubicacion location){
@@ -25,12 +25,18 @@ public class Sucursal {
         this.nombre = name;
         this.ubicacion = location;
         archivos = new HashMap<String,Archivo>();
+        keys = new ArrayList<String>();
     }
     
     //Métodos de la clase
     
     public boolean agregarArchivo(String key,Archivo valor){
-        return this.archivos.putIfAbsent(key,valor) == null;
+        
+        if(archivos.containsKey(key)) return false;
+        
+        archivos.put(key, valor);
+        keys.add(key);
+        return true;
         //Retorna true si se insertó
     }
     
@@ -61,9 +67,22 @@ public class Sucursal {
         return this.id;
     }
     
+    public String getKey(int i){
+        return keys.get(i);
+    }
+    
+    public int getTotalArchivos(){
+        return archivos.size();
+    }
+    
     public Archivo getArchivo(String rut){
         if (rut == null) return null;
-        return this.archivos.get(rut);
+        return archivos.get(rut);
+    }
+    
+    //sobreCarga
+    public Archivo getArchivo(int i){
+        return archivos.get(getKey(i));
     }
     
     public String getNombre(){
@@ -74,7 +93,4 @@ public class Sucursal {
         return this.ubicacion;
     }
     
-    public void mostrarPersona(){
-        //pendiente hasta que esté lista la clase Archivo
-    }
 }

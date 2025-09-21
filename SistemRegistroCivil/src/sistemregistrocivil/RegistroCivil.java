@@ -17,14 +17,33 @@ public class RegistroCivil {
     private HashMap<String, Sucursal> sucursales = new HashMap<>();
     private HashMap<String, Persona> listaPersonas = new HashMap<>();
     private ArrayList<String> clavesSucursales = new ArrayList<>();
+    private ArrayList<String> rutsPersonas = new ArrayList<>();
 
     
     public int getTotalClaves(){
         return clavesSucursales.size();
     }
     
+    public int getTotalPersonas(){
+        return listaPersonas.size();
+    }
+    
     public Sucursal getSucursal(String key){
         return sucursales.get(key);
+    }
+    
+    //sobreCarga
+    public Sucursal getSucursal(int i){
+        return sucursales.get(getClave(i));
+    }
+    
+    public Persona getPersona(int i){
+        return listaPersonas.get(getRut(i));
+    }
+    
+    //sobreCarga
+    public Persona getPersona(String rut){
+        return listaPersonas.get(rut);
     }
     
     public HashMap<String, Sucursal> getSucursales(){
@@ -33,6 +52,10 @@ public class RegistroCivil {
     
     public String getClave(int i){
         return clavesSucursales.get(i);
+    }
+    
+    public String getRut(int i){
+        return rutsPersonas.get(i);
     }
     
     private boolean validarRut(String rut) {
@@ -50,21 +73,17 @@ public class RegistroCivil {
     //Verificar nacimiento
     public boolean nacimiento(Persona persona, String nombreSucursal) {
         if (validarRut(persona.getRut())) return false;
-        
-
-        listaPersonas.put(persona.getRut(), persona); //agregar persona a la
-        // lista total de personas
-
-                                                     
+                                          
         Sucursal suc = sucursales.get(nombreSucursal);
         if (suc == null) return false;
-        
         
         Archivo archivo = new Archivo();
         boolean asignado = archivo.setPersona(persona);
 
         if (!asignado) return false;
        
+        listaPersonas.put(persona.getRut(), persona); //agregar persona a la
+        rutsPersonas.add(persona.getRut());          // lista total de personas
         suc.agregarArchivo(nombreSucursal,archivo);
         return true;
     }

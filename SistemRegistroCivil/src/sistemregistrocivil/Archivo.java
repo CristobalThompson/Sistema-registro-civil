@@ -124,10 +124,8 @@ public class Archivo {
     
     public boolean divorcio(){
         
-        Fecha vacia = new Fecha();
-        vacia.setDia(0);
-        vacia.setMes(0);
-        vacia.setAño(0);
+        Fecha vacia = new Fecha(0,0,0);
+        
         
         Archivo otro = this.conyuge;
         

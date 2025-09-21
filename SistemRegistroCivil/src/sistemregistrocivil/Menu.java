@@ -101,8 +101,7 @@ public class Menu extends JFrame {
             return;
         }
         for (int i = 0; i < rc.getTotalClaves(); ++i) {
-            String key = rc.getClave(i);
-            Sucursal suc = rc.getSucursal(key);
+            Sucursal suc = rc.getSucursal(i);
             
             if(suc == null) continue;
             m.addRow(new Object[]{
