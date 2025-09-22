@@ -190,7 +190,8 @@ public class Menu extends JFrame {
         
         btnEliminar.addActionListener(ev ->{
             if (rc.getTotalClaves() == 0){
-                JOptionPane.showMessageDialog(this, "No hay sucursales para eliminar");
+                JOptionPane.showMessageDialog(this, "No hay sucursales para eliminar", 
+                    "Aviso", JOptionPane.WARNING_MESSAGE);
             }
             else{
                 eliminarSucursalSwing();
@@ -262,7 +263,34 @@ public class Menu extends JFrame {
     }
     
     private void eliminarSucursalSwing(){
+        JTextField campoNombre = new JTextField(20);
         
+        JPanel panel = new JPanel(new GridLayout(0, 2, 6, 6));
+        panel.add(new JLabel("Nombre de la sucursal a eliminar:"));
+        panel.add(campoNombre);
+        
+        int confirmacion = JOptionPane.showConfirmDialog(this, panel, 
+                "Eliminar sucursal", JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE);
+        
+        if (confirmacion != JOptionPane.OK_OPTION) return;
+        
+        String nombre = campoNombre.getText().trim();
+        
+        //esto puede ser un Exception, para cambiar esto dsp
+        if (nombre.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El nombre es obligatorio", 
+                    "Aviso", JOptionPane.WARNING_MESSAGE);
+        return;
+        }
+        
+        if (rc.eliminarSucursal(nombre))
+            JOptionPane.showMessageDialog(this, "Sucursal " + nombre + " eliminado");
+        
+        else JOptionPane.showMessageDialog(this, 
+                "No se pudo eliminar (no encontrada).",
+                "Aviso", JOptionPane.WARNING_MESSAGE);
+       
     }
     
     private void abrirSubMenuPersonas(){

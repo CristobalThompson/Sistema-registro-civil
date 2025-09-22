@@ -63,11 +63,18 @@ public class RegistroCivil {
     }
     
     public boolean agregarSucursal(String nombreSucursal, Sucursal sucursal) {
-    if (sucursales.containsKey(nombreSucursal)) return false;
+        if (sucursales.containsKey(nombreSucursal)) return false;
     
-    clavesSucursales.add(nombreSucursal);
-    sucursales.put(nombreSucursal, sucursal);
-    return true;
+        clavesSucursales.add(nombreSucursal.trim());
+        sucursales.put(nombreSucursal.trim(), sucursal);
+        return true;
+    }
+    
+    public boolean eliminarSucursal(String nombreSucursal){
+        if (!clavesSucursales.contains(nombreSucursal)) return false;
+        sucursales.remove(nombreSucursal);
+        clavesSucursales.remove(nombreSucursal);
+        return true;
     }
     
     //Verificar nacimiento
