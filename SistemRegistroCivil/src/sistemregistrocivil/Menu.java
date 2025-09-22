@@ -25,9 +25,9 @@ public class Menu extends JFrame {
     private boolean datosCargados = false;
     private Integer ultimaFilaModelo = null;
     
-    private final JButton btnCargar = new JButton("Cargar datos"); //botones
-    private final JButton btnSucursales = new JButton("Mostrar Sucursales");
+    private final JButton btnCargar = new JButton("Administrar Sucursales"); //botones
     private final JButton btnCertificados = new JButton("Certificados");
+    private final JButton btnPersonas = new JButton("Administrar Personas");
     
     private final JTable tabla = new JTable(); //tabla para mostrar datos
     private final DefaultTableModel modeloTabla =
@@ -51,8 +51,8 @@ public class Menu extends JFrame {
         
         JPanel barra = new JPanel(new FlowLayout(FlowLayout.LEFT)); //panel para los botones
         barra.add(btnCargar);
-        barra.add(btnSucursales);
-        barra.add(btnCertificados);
+        barra.add(btnCertificados); //posible cambio
+        barra.add(btnPersonas);
         add(barra, BorderLayout.NORTH); //inserta la barra en la zona north de la ventana
         
         tabla.setModel(modeloTabla);
@@ -75,15 +75,10 @@ public class Menu extends JFrame {
         });
         
         //agregar funcionalidad a los botones cuando se hace click
-        btnCargar.addActionListener(e -> {
-            try{
-                cargarDatos();
-            }catch(IOException ex){
-                JOptionPane.showMessageDialog(this, "No se pudo cargar las sucursales");
-            }}); //"e ->" expresion lambda
         
-        btnSucursales.addActionListener(e -> cargarTablaSucursales());
+        btnCargar.addActionListener(e -> abrirSubmenuSucursales());
         btnCertificados.addActionListener(e -> abrirSubmenuCertificados());
+        btnPersonas.addActionListener(e -> abrirSubMenuPersonas());
         
         UIManager.put("OptionPane.okButtonText", "OK"); //cambiar los botones a español
         UIManager.put("OptionPane.cancelButtonText", "Cancelar");
@@ -148,7 +143,7 @@ public class Menu extends JFrame {
         int filaModelo = tabla.convertRowIndexToModel(filaVista);
         
         if (Objects.equals(ultimaFilaModelo, filaModelo)) return;
-        ultimaFilaModelo = filaModelo;
+        ultimaFilaModelo = filaModelo; //que no haga nada si clickea la misma casilla
         
         modeloPersonas.setRowCount(0);
         
@@ -158,8 +153,120 @@ public class Menu extends JFrame {
             Archivo arc = suc.getArchivo(i);
             if (arc == null) continue;
             Persona p = arc.getPersona();
-            modeloPersonas.addRow(new Object[]{p.getRut(), p.getNombre()});
+            modeloPersonas.addRow(new Object[]{p.getRut(), p.getNombre()}); //falta agregar estado civil aqui
         }
+    }
+    
+    private void abrirSubmenuSucursales(){
+        JDialog jdl = new JDialog(this, "Administrar sucursales", true);
+        jdl.setLayout(new GridLayout(0,1,8,8));
+        jdl.setSize(320, 200);
+        jdl.setLocationRelativeTo(this);
+        
+        JButton btnCsv = new JButton("Cargar sucursales via CSV ");
+        JButton btnAgregar = new JButton("Agregar nueva sucursal");
+        JButton btnEliminar = new JButton("Eliminar sucursal");
+        JButton btnCerrar = new JButton("Cerrar");
+        
+        jdl.add(btnCsv);
+        jdl.add(btnAgregar);
+        jdl.add(btnEliminar);
+        jdl.add(btnCerrar);
+        
+        btnCsv.addActionListener(ev ->{
+            try{
+                cargarDatos();
+                cargarTablaSucursales();
+                jdl.dispose();
+            }catch(IOException ex){
+                JOptionPane.showMessageDialog(this, "No se pudo cargar las sucursales");
+            }});
+        
+        btnAgregar.addActionListener(ev ->{
+            agregarSucursalSwing();
+            cargarTablaSucursales();
+            modeloPersonas.setRowCount(0);
+        });
+        
+        btnEliminar.addActionListener(ev ->{
+            if (rc.getTotalClaves() == 0){
+                JOptionPane.showMessageDialog(this, "No hay sucursales para eliminar");
+            }
+            else{
+                eliminarSucursalSwing();
+                cargarTablaSucursales();
+                modeloPersonas.setRowCount(0); 
+            }
+        });
+        
+        btnCerrar.addActionListener(ev -> jdl.dispose()); //cerrar jdl
+        
+        jdl.setVisible(true);
+    }
+    
+    private void agregarSucursalSwing(){
+        JTextField campoNombre = new JTextField(20);
+        JTextField campoRegion = new JTextField(20);
+        JTextField campoCiudad = new JTextField(20);
+        JTextField campoComuna = new JTextField(20);
+        JTextField campoDireccion = new JTextField(20);
+        
+        JPanel panel = new JPanel(new GridLayout(0, 2, 6, 6));
+        panel.add(new JLabel("Nombre:"));
+        panel.add(campoNombre);
+        
+        panel.add(new JLabel("Región:"));
+        panel.add(campoRegion);
+        
+        panel.add(new JLabel("Ciudad:"));
+        panel.add(campoCiudad);
+        
+        panel.add(new JLabel("Comuna:"));
+        panel.add(campoComuna);
+        
+        panel.add(new JLabel("Dirección:"));
+        panel.add(campoDireccion);
+        
+        int confirmacion = JOptionPane.showConfirmDialog(this, panel, 
+                "Agregar sucursal", JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE);
+        
+        if (confirmacion != JOptionPane.OK_OPTION) return;
+        
+        String nombre = campoNombre.getText().trim();
+        
+        //esto puede ser un Exception, para cambiar esto dsp
+        if (nombre.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El nombre es obligatorio", 
+                    "Aviso", JOptionPane.WARNING_MESSAGE);
+        return;
+        }
+        
+        int id = rc.getTotalClaves() + 1;
+        
+        Ubicacion ubi = new Ubicacion(campoRegion.getText().trim(),
+                                      campoCiudad.getText().trim(),
+                                      campoComuna.getText().trim(),
+                                      campoDireccion.getText().trim());
+        Sucursal suc = new Sucursal(id, nombre, ubi);
+        
+        if (rc.agregarSucursal(nombre, suc)){
+            JOptionPane.showMessageDialog(this, "Sucursal agregada correctamente.");
+        }
+        else{
+            JOptionPane.showMessageDialog(this, "Ya existía una sucursal con ese nombre.",
+                                      "Aviso", JOptionPane.WARNING_MESSAGE);
+        }
+        
+        
+    }
+    
+    private void eliminarSucursalSwing(){
+        
+    }
+    
+    private void abrirSubMenuPersonas(){
+        //PENDIENTE
     }
     
     private void abrirSubmenuCertificados(){

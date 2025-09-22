@@ -10,7 +10,7 @@ public class GestorCSV {
         String linea;
         
         linea = lectorCSV.readLine(); //eliminar encabezados
-        int id = 1;
+        int id = rc.getTotalClaves() + 1;
         while((linea = lectorCSV.readLine()) != null){
             String[] datosSucursales = linea.split(",");
             
