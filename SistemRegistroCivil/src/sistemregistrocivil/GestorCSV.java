@@ -1,5 +1,6 @@
 package sistemregistrocivil;
 
+import sistemregistrocivil.model.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 

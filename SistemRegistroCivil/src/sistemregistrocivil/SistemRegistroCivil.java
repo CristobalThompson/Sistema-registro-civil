@@ -2,6 +2,8 @@
 package sistemregistrocivil;
 
 import java.io.IOException;
+import sistemregistrocivil.view.Menu;
+import sistemregistrocivil.model.RegistroCivil;
 /**
  *
  * @author crist
