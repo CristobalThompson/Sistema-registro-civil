@@ -53,6 +53,10 @@ public class RegistroCivil {
         return sucursales;
     }
     
+    public ArrayList<String> getClavesSucursales(){
+        return clavesSucursales;
+    }
+    
     public String getClave(int i){
         return clavesSucursales.get(i);
     }
@@ -68,6 +72,11 @@ public class RegistroCivil {
     public void agregarPersona(Persona p){
         listaPersonas.put(p.getRut(), p);
         rutsPersonas.add(p.getRut());
+    }
+    
+    public void eliminarPersona(Persona p){
+        listaPersonas.remove(p.getRut());
+        rutsPersonas.remove(p.getRut());
     }
     
     public boolean agregarSucursal(String nombreSucursal, Sucursal sucursal) {

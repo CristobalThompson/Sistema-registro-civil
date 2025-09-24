@@ -118,7 +118,23 @@ public class PersonaController {
     }
     
     public void eliminarPersona(Persona p){
-        //pendiente
+        if (p == null) return;
+        
+        Sucursal suc = sucursalActual.get();
+        if (suc == null) return;
+        
+        boolean ok = suc.eliminarArchivo(p.getRut());
+        if (!ok){
+            JOptionPane.showMessageDialog(padre, 
+                    "No se pudo eliminar la persona seleccionada (rut no encontrado)",
+                    "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        rc.eliminarPersona(p);
+        modeloPersonas.setSucursal(suc);
+        if (tablaPersonas.getRowCount() > 0) {
+        tablaPersonas.scrollRectToVisible(tablaPersonas.getCellRect(0, 0, true));
+        }
     }
     
     
