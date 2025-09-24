@@ -21,6 +21,7 @@ public class Persona {
         this.rut = rut;
         this.nombre = nombre;
         fechaNacimiento = nac;
+        estadoCivil = "Soltero/a";
     }
     
     public boolean setRut(String rut){

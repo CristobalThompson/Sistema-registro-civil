@@ -10,6 +10,7 @@ import sistemregistrocivil.view.panel.*;
 import sistemregistrocivil.view.table.*;
 import sistemregistrocivil.controller.*;
 import sistemregistrocivil.view.popup.*;
+import java.util.function.Supplier;
 
 
 public class Menu extends JFrame {
@@ -18,8 +19,11 @@ public class Menu extends JFrame {
     private boolean datosCargados;
     private Integer ultimaFilaModelo;
     private int filaModeloParaPopup;
+    
     private SucursalController sucController;
+    private PersonaController perController;
     private MenuContextualSucursales popupSucursales;
+    private MenuContextualPersonas popupPersonas;
     
     private final JButton btnCargar; //botones
     private final JButton btnCertificados;
@@ -65,7 +69,15 @@ public class Menu extends JFrame {
         
         sucController.conectarVistaControlador();
         
-        //instalarMenu();
+        Supplier<Sucursal> sucursalSeleccionada = () -> {
+            int fila = tabla.getSelectedRow();
+            if (fila < 0) return null;
+            int fm = tabla.convertRowIndexToModel(fila);
+            return modeloTabla.getAt(fm);
+        };
+        
+        perController = new PersonaController(this, rc, tablaPersonas, 
+                modeloPersonas, sucursalSeleccionada);
         
         tabla.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         
@@ -77,9 +89,8 @@ public class Menu extends JFrame {
                 return modeloTabla.getAt(filaModelo);
             },
             s -> {
-                // TODO: abre tu diálogo de personas. Temporalmente:
                 JOptionPane.showMessageDialog(this, "Agregar persona en: " + s.getNombre());
-            // Ejemplo si luego creas en el controller: sucController.agregarPersonaDialog(s);
+                perController.agregarPersona(s);
             },
             s -> {
                 int r = JOptionPane.showConfirmDialog(this, 
@@ -95,10 +106,33 @@ public class Menu extends JFrame {
                     }
                 }
             },
-            s -> sucController.verDetallerSucursal(s)
+            s -> sucController.verDetallesSucursal(s)
         );
         
+        
+        
+        popupPersonas = new MenuContextualPersonas(
+            () -> {
+                int fila = tablaPersonas.getSelectedRow();
+                if (fila < 0) return null;
+                int filaModelo = tablaPersonas.convertRowIndexToModel(fila);
+                return modeloPersonas.getAt(filaModelo);
+            },
+            p -> {
+                int confirmacion = JOptionPane.showConfirmDialog(this, 
+                        "¿Desea eliminar a " + p.getNombre() + "?", "Confirmar",
+                        JOptionPane.OK_CANCEL_OPTION);
+                if (confirmacion == JOptionPane.OK_OPTION){
+                    perController.eliminarPersona(p);
+                }
+            },
+            p -> perController.verDetalles(p)
+        
+        );
+        
+        
         MenuContextualSucursales.instalarEnTabla(tabla, popupSucursales);
+        MenuContextualPersonas.instalarEnTabla(tablaPersonas, popupPersonas);
 
         UIManager.put("OptionPane.okButtonText", "Ok"); //cambiar los botones a español
         UIManager.put("OptionPane.cancelButtonText", "Cancelar");

@@ -66,5 +66,7 @@ public class PersonasTableModel extends AbstractTableModel {
         return null;
     }
     
-    
+    public Persona getAt(int filaModelo){
+        return getPersonaAt(filaModelo);
+    }
 }

@@ -1,13 +1,12 @@
 package sistemregistrocivil.view.table;
 
 import javax.swing.table.AbstractTableModel;
-import sistemregistrocivil.model.RegistroCivil;
-import sistemregistrocivil.model.Sucursal;
+import sistemregistrocivil.model.*;
 
 
 public class SucursalesTableModel extends AbstractTableModel{
     private final RegistroCivil rc;
-    private final String[] cols = {"ID", "Nombre", "Ciudad"};
+    private final String[] cols = {"ID", "Nombre", "Ciudad", "Dirección"};
     
     public SucursalesTableModel(RegistroCivil rc){
         this.rc = rc;
@@ -30,7 +29,7 @@ public class SucursalesTableModel extends AbstractTableModel{
     
     @Override 
     public Class<?> getColumnClass(int c) { 
-        return c==0? Integer.class:String.class; 
+        return c == 0 ? Integer.class : String.class; 
     }
     
     @Override 
@@ -50,6 +49,8 @@ public class SucursalesTableModel extends AbstractTableModel{
                 return suc.getNombre();
             case 2:
                 return suc.getUbicacion().getCiudad();
+            case 3:
+                return suc.getUbicacion().getDireccion();
             default :
                 return "";
         }

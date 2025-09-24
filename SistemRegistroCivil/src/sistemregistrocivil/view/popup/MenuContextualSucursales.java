@@ -24,8 +24,8 @@ public class MenuContextualSucursales extends JPopupMenu {
         
         agregarPersona.addActionListener(e ->{
             Sucursal suc = selectedSucursalSupplier.get();
-            //if (suc != null && onAgregarPersona != null)
-                //onAgregarPersona.accept(suc);
+            if (suc != null && onAgregarPersona != null)
+                onAgregarPersona.accept(suc);
         });
         
         eliminarSuc.addActionListener(e ->{

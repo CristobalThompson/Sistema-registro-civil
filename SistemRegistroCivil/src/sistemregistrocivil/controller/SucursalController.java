@@ -268,7 +268,7 @@ public class SucursalController {
         return ok;
     }
     
-    public void verDetallerSucursal(Sucursal suc){
+    public void verDetallesSucursal(Sucursal suc){
         JOptionPane.showMessageDialog(padre,
             "Nombre: " + suc.getNombre() + "\n" +
             "Ciudad: " + suc.getUbicacion().getCiudad() + "\n" +

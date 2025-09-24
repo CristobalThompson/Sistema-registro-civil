@@ -61,8 +61,13 @@ public class RegistroCivil {
         return rutsPersonas.get(i);
     }
     
-    private boolean validarRut(String rut) {
+    public boolean validarRut(String rut) {
         return listaPersonas.containsKey(rut);
+    }
+    
+    public void agregarPersona(Persona p){
+        listaPersonas.put(p.getRut(), p);
+        rutsPersonas.add(p.getRut());
     }
     
     public boolean agregarSucursal(String nombreSucursal, Sucursal sucursal) {

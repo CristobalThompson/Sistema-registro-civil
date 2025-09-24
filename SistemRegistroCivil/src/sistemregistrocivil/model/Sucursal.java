@@ -30,18 +30,24 @@ public class Sucursal {
     
     //Métodos de la clase
     
-    public boolean agregarArchivo(String key,Archivo valor){
+    public boolean agregarArchivo(String rut,Archivo valor){
         
-        if(archivos.containsKey(key)) return false;
+        if(archivos.containsKey(rut)) return false;
         
-        archivos.put(key, valor);
-        keys.add(key);
+        archivos.put(rut, valor);
+        keys.add(rut);
         return true;
         //Retorna true si se insertó
     }
     
-    public boolean eliminarArchivo(String key, Archivo value){
-        return this.archivos.remove(key,value);
+    public boolean eliminarArchivo(String rut, Archivo value){
+        return this.archivos.remove(rut, value);
+    }
+    
+    public boolean eliminarArchivo(String rut){
+        if (!archivos.containsKey(rut)) return false;
+        archivos.remove(rut);
+        return true;
     }
     
     //Métodos sets
