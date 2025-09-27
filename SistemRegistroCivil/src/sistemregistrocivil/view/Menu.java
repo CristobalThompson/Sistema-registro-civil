@@ -26,8 +26,8 @@ public class Menu extends JFrame {
     private MenuContextualPersonas popupPersonas;
     
     private final JButton btnCargar; //botones
-    private final JButton btnCertificados;
     private final JButton btnPersonas;
+    private final JButton btnGuardar;
     
     private final JTable tabla = new JTable(); //tabla para mostrar datos
     private final JTable tablaPersonas = new JTable(); //tabla para personas por sucursal
@@ -48,15 +48,15 @@ public class Menu extends JFrame {
         modeloPersonas = new PersonasTableModel();
         
         btnCargar = new JButton("Administrar Sucursales");
-        btnCertificados = new JButton("Certificados");
         btnPersonas = new JButton("Administrar Personas");
+        btnGuardar = new JButton("Guardar datos");
         
         setDefaultCloseOperation(EXIT_ON_CLOSE); //indica que cuando se cierre la ventana, se finalize con exito la ejecucion
         setSize(700, 400); //fijar el size de la ventana
         setLocationRelativeTo(null); //centra la ventana en la pantalla
         setLayout(new BorderLayout()); //divide la ventana en 5 zonas: NORTH, SOUTH, CENTER, EAST, WEST.
         
-        add(new BarraSuperior(btnCargar, btnCertificados, btnPersonas), BorderLayout.NORTH);
+        add(new BarraSuperior(btnCargar, btnPersonas, btnGuardar), BorderLayout.NORTH);
         
         tabla.setModel(modeloTabla);
         tablaPersonas.setModel(modeloPersonas);
@@ -65,7 +65,7 @@ public class Menu extends JFrame {
         
         sucController = new SucursalController(this, rc, gestor,
                         tabla, tablaPersonas, modeloTabla, modeloPersonas,
-                        btnCargar, btnCertificados, btnPersonas);
+                        btnCargar, btnPersonas, btnGuardar);
         
         sucController.conectarVistaControlador();
         

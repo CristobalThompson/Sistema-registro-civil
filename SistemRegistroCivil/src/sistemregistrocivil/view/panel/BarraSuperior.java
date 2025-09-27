@@ -5,11 +5,11 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 public class BarraSuperior extends JPanel {
-    public BarraSuperior(JButton btnCargar, JButton btnCertificados, 
-            JButton btnPersonas){
+    public BarraSuperior(JButton btnCargar,
+            JButton btnPersonas, JButton btnGuardar){
         super(new FlowLayout(FlowLayout.LEFT));
         add(btnCargar);
-        add(btnCertificados);
         add(btnPersonas);
+        add(btnGuardar);
     }
 }

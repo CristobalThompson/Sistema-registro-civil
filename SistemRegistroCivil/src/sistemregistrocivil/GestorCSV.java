@@ -84,7 +84,7 @@ public class GestorCSV {
         OutputStreamWriter osw = new OutputStreamWriter(fos, StandardCharsets.UTF_8);
         BufferedWriter bw = new BufferedWriter(osw);
         PrintWriter pw = new PrintWriter(bw);
-        
+        pw.println("Rut,Nombre,Año,Mes,Dia,nombre sucursal");
         for(int i = 0; i < rc.getTotalClaves(); ++i){
             Sucursal suc = rc.getSucursal(i);
             if (suc == null) continue;

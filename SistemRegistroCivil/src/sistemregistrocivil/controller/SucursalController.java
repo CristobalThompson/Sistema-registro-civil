@@ -23,13 +23,13 @@ public class SucursalController {
     private final SucursalesTableModel modeloSucursales;
     private final PersonasTableModel modeloPersonas;
     
-    private final JButton btnSucursales, btnCertificados, btnPersonas;
+    private final JButton btnSucursales, btnPersonas, btnGuardar;
 
     public SucursalController(JFrame padre, 
             RegistroCivil rc, GestorCSV gestor, JTable tablaSucursales, 
             JTable tablaPersonas, SucursalesTableModel modeloSucursales, 
             PersonasTableModel modeloPersonas, JButton btnSucursales, 
-            JButton btnCertificados, JButton btnPersonas) {
+            JButton btnPersonas, JButton btnGuardar) {
         this.padre = padre;
         this.rc = rc;
         this.gestor = gestor;
@@ -38,8 +38,8 @@ public class SucursalController {
         this.modeloSucursales = modeloSucursales;
         this.modeloPersonas = modeloPersonas;
         this.btnSucursales = btnSucursales;
-        this.btnCertificados = btnCertificados;
         this.btnPersonas = btnPersonas;
+        this.btnGuardar = btnGuardar;
         datosCargadosP = false;
         datosCargadosS = false;
     }
@@ -51,10 +51,8 @@ public class SucursalController {
         tablaSucursales.getSelectionModel().addListSelectionListener(sel);
         
         btnSucursales.addActionListener(e -> abrirSubmenuSucursales());
-        btnCertificados.addActionListener(e -> abrirSubmenuCertificados());
         btnPersonas.addActionListener(e -> abrirSubMenuPersonas());
-        
-        
+        btnGuardar.addActionListener(e -> abrirSubMenuGuardar());
     }
     
     private void cargarDatosP() throws IOException{
@@ -277,16 +275,20 @@ public class SucursalController {
     private void abrirSubMenuPersonas(){
         JDialog jdl = new JDialog(padre, "Administrar Personas", true);
         jdl.setLayout(new GridLayout(0,1,8,8));
-        jdl.setSize(360, 200);
+        jdl.setSize(390, 300);
         jdl.setLocationRelativeTo(padre);
         
         JButton btnCsv = new JButton("Cargar personas vía CSV (cargar sucursales primero)");
+        JButton btnCertificados = new JButton("Administrar Certificados");
         JButton btnAgregar = new JButton("Agregar nueva persona");
+        JButton btnModificar = new JButton("Modificar persona existente");
         JButton btnEliminar = new JButton("Eliminar persona");
         JButton btnCerrar = new JButton("Cerrar");
         
         jdl.add(btnCsv);
+        jdl.add(btnCertificados);
         jdl.add(btnAgregar);
+        jdl.add(btnModificar);
         jdl.add(btnEliminar);
         jdl.add(btnCerrar);
         
@@ -301,6 +303,17 @@ public class SucursalController {
             }
         });
         
+        btnCertificados.addActionListener(ev ->{
+            if (rc.getTotalPersonas() == 0){
+                JOptionPane.showMessageDialog(padre, 
+                        "No hay personas para administrar Personas", 
+                    "Aviso", JOptionPane.WARNING_MESSAGE);
+            }
+            else{
+                abrirSubmenuCertificados();
+            }
+        });
+        
         btnAgregar.addActionListener(ev ->{
             if (rc.getTotalClaves() == 0){
                 JOptionPane.showMessageDialog(padre, "No hay sucursales para agregar a alguien", 
@@ -308,6 +321,18 @@ public class SucursalController {
             }
             else{
                 agregarPersonaSwing();
+                modeloPersonas.setSucursal(null);
+            }
+        });
+        
+        btnModificar.addActionListener(ev ->{
+            if (rc.getTotalPersonas() == 0){
+                JOptionPane.showMessageDialog(padre, "No hay personas para modificar", 
+                    "Aviso", JOptionPane.WARNING_MESSAGE);
+            }
+            else{
+                modificarPersonaSwing();
+                cargarTablaSucursales();
                 modeloPersonas.setSucursal(null);
             }
         });
@@ -430,6 +455,10 @@ public class SucursalController {
         
     }
     
+    private void modificarPersonaSwing(){
+        
+    }
+    
     private void eliminarPersonaSwing(){
         JTextField campoRut = new JTextField(12);
         JPanel panel = new JPanel(new GridLayout(0, 2, 6, 6));
@@ -487,5 +516,44 @@ public class SucursalController {
             "Comuna: " + suc.getUbicacion().getComuna() + "\n" +
             "Dirección: " + suc.getUbicacion().getDireccion(),
             "Sucursal", JOptionPane.INFORMATION_MESSAGE);
+    }
+    
+    private void abrirSubMenuGuardar(){
+        JDialog jdl = new JDialog(padre, "Guardar datos", true);
+        jdl.setLayout(new GridLayout(0,1,8,8));
+        jdl.setSize(390, 200);
+        jdl.setLocationRelativeTo(padre);
+        
+        JButton guarSucCsv = new JButton("guardar datos de sucursales en CSV");
+        JButton guarPerCsv = new JButton("guardar datos de personas en CSV");
+        
+        jdl.add(guarSucCsv);
+        jdl.add(guarPerCsv);
+        
+        guarSucCsv.addActionListener(e -> {
+            try{
+                gestor.guardarCsvSucursales(rc);
+                JOptionPane.showMessageDialog(padre, 
+                        "datos de sucursales guardados con exito");
+                
+            }catch(IOException ex){
+                JOptionPane.showMessageDialog(padre, 
+                        "No se pudo guardar los datos de las sucursales", 
+                    "Aviso", JOptionPane.WARNING_MESSAGE);
+            }
+        });
+        
+        guarPerCsv.addActionListener(e ->{
+            try{
+                gestor.guardarCsvPersonas(rc);
+                JOptionPane.showMessageDialog(padre, 
+                        "datos de personas guardados con exito");
+            }catch(IOException ex){
+                JOptionPane.showMessageDialog(padre, 
+                        "No se pudo guardar los datos de las personas",
+                    "Aviso", JOptionPane.WARNING_MESSAGE);
+            }
+        });
+        jdl.setVisible(true);
     }
 }
