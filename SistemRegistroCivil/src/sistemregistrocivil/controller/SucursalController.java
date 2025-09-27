@@ -431,7 +431,44 @@ public class SucursalController {
     }
     
     private void eliminarPersonaSwing(){
+        JTextField campoRut = new JTextField(12);
+        JPanel panel = new JPanel(new GridLayout(0, 2, 6, 6));
+        panel.add(new JLabel("RUT a buscar:"));          
+        panel.add(campoRut);
         
+        int confirmacion = JOptionPane.showConfirmDialog(padre, panel, 
+                "Eliminar Persona", 
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        
+        if (confirmacion != JOptionPane.OK_OPTION) return;
+        
+        String rut = campoRut.getText().trim();
+        
+        if (rut.isEmpty()){
+            JOptionPane.showMessageDialog(padre, "RUT es obligatorio",
+                "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        } 
+        
+        if (!rc.validarRut(rut)){
+            JOptionPane.showMessageDialog(padre, "El rut ingresado no esta en el sistema",
+                "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        for(int i = 0; i < rc.getTotalClaves(); ++i){
+            Sucursal suc = rc.getSucursal(i);
+            Archivo arc = suc.getArchivo(rut);
+            if (arc != null) {
+                Persona p = arc.getPersona();
+                rc.eliminarPersona(p);
+                suc.eliminarArchivo(rut, arc);
+                
+                JOptionPane.showMessageDialog(padre, "Persona " + p.getNombre() 
+                        + " eliminada");
+                return;
+            }
+        }
     }
     
     public boolean eliminarSucursal(String nombreSucursal){

@@ -120,7 +120,7 @@ public class PersonaController {
     public void eliminarPersona(Persona p){
         if (p == null) return;
         
-        Sucursal suc = sucursalActual.get();
+        Sucursal suc = sucursalActual.get();//aa
         if (suc == null) return;
         
         boolean ok = suc.eliminarArchivo(p.getRut());
@@ -141,7 +141,6 @@ public class PersonaController {
     public void verDetalles(Persona p){
         if (p == null) return;
 
-        // proteger nacimiento nulo
         String nac;
         if (p.getNacimiento() == null) {
             nac = "—";
@@ -151,7 +150,6 @@ public class PersonaController {
                 p.getNacimiento().getAño();
         }
 
-        // proteger campos potencialmente nulos
         String nombre = (p.getNombre() == null) ? "—" : p.getNombre();
         String rut    = (p.getRut()    == null) ? "—" : p.getRut();
         String civil  = (p.getCivil()  == null) ? "—" : p.getCivil();
