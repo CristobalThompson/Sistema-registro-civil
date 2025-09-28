@@ -1,5 +1,6 @@
 package sistemregistrocivil.controller;
 
+import excepciones.*;
 import java.awt.GridLayout;
 import javax.swing.*;
 import sistemregistrocivil.model.*;
@@ -27,7 +28,7 @@ public class PersonaController {
     }
 
 
-    public void agregarPersona(Sucursal suc){
+    public void agregarPersona(Sucursal suc) throws SinSentidoException, InvalidFechaException, RepetidoException{
         if (suc == null) return;
         
         JTextField campoRut = new JTextField(12);
@@ -62,9 +63,7 @@ public class PersonaController {
         String nombre = campoNombre.getText().trim();
         
         if (rut.isEmpty() || nombre.isEmpty()){
-            JOptionPane.showMessageDialog(padre, "RUT y Nombre son obligatorios.",
-                "Aviso", JOptionPane.WARNING_MESSAGE);
-            return;
+            throw new SinSentidoException();
         }
         
         Fecha fn = null;
@@ -78,16 +77,11 @@ public class PersonaController {
                     int año = Integer.parseInt(p[2]);
                     fn = new Fecha(dia, mes, año);
                 }catch(NumberFormatException e){
-                    JOptionPane.showMessageDialog(padre, 
-                            "Fecha inválida (usa (dd/mm/aaaa", "Aviso",
-                            JOptionPane.WARNING_MESSAGE);
-                    return;
+                    throw new InvalidFechaException();
                 }
             }
             else{
-                JOptionPane.showMessageDialog(padre, "Fecha inválida (usa dd/mm/aaaa).",
-                    "Aviso", JOptionPane.WARNING_MESSAGE);
-                return;
+                throw new InvalidFechaException();
             }
         }
         
@@ -100,10 +94,7 @@ public class PersonaController {
         
         boolean ok = rc.validarRut(rut);
         if (ok){
-            JOptionPane.showMessageDialog(padre, 
-                    "Ya existe una persona con ese RUT en el registro.",
-                "Duplicado", JOptionPane.WARNING_MESSAGE);
-            return;
+            throw new RepetidoException();
         }
         rc.agregarPersona(per);
         suc.agregarArchivo(rut, nuevoArchivo);
@@ -120,7 +111,7 @@ public class PersonaController {
     public void eliminarPersona(Persona p){
         if (p == null) return;
         
-        Sucursal suc = sucursalActual.get();//aa
+        Sucursal suc = sucursalActual.get();
         if (suc == null) return;
         
         boolean ok = suc.eliminarArchivo(p.getRut());

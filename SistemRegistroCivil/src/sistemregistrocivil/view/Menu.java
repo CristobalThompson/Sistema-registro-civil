@@ -1,5 +1,8 @@
 package sistemregistrocivil.view;
 
+import excepciones.InvalidFechaException;
+import excepciones.RepetidoException;
+import excepciones.SinSentidoException;
 import sistemregistrocivil.model.*;
 
 import javax.swing.*;
@@ -11,14 +14,13 @@ import sistemregistrocivil.view.table.*;
 import sistemregistrocivil.controller.*;
 import sistemregistrocivil.view.popup.*;
 import java.util.function.Supplier;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class Menu extends JFrame {
     private final RegistroCivil rc;
     private GestorCSV gestor;
-    private boolean datosCargados;
-    private Integer ultimaFilaModelo;
-    private int filaModeloParaPopup;
     
     private SucursalController sucController;
     private PersonaController perController;
@@ -43,9 +45,6 @@ public class Menu extends JFrame {
         super("Registro Civil");
         this.rc = rc;
         gestor = new GestorCSV();
-        datosCargados = false;
-        ultimaFilaModelo = null;
-        filaModeloParaPopup = -1;
         
         modeloTabla = new SucursalesTableModel(rc);
         modeloPersonas = new PersonasTableModel();
@@ -96,7 +95,20 @@ public class Menu extends JFrame {
             },
             s -> {
                 JOptionPane.showMessageDialog(this, "Agregar persona en: " + s.getNombre());
+            try {
                 perController.agregarPersona(s);
+            } catch (SinSentidoException ex) {
+                JOptionPane.showMessageDialog(this, "RUT y Nombre son obligatorios.",
+                "Aviso", JOptionPane.WARNING_MESSAGE);
+            } catch (InvalidFechaException ex) {
+                JOptionPane.showMessageDialog(this, 
+                            "Fecha inválida (usa (dd/mm/aaaa", "Aviso",
+                            JOptionPane.WARNING_MESSAGE);
+            } catch (RepetidoException ex) {
+                JOptionPane.showMessageDialog(this, 
+                    "Ya existe una persona con ese RUT en el registro.",
+                "Duplicado", JOptionPane.WARNING_MESSAGE);
+            }
             },
             s -> {
                 int r = JOptionPane.showConfirmDialog(this, 

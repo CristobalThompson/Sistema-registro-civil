@@ -2,9 +2,12 @@
 package sistemregistrocivil.controller;
 
 
+import excepciones.*;
 import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
 import sistemregistrocivil.GestorCSV;
@@ -165,7 +168,15 @@ public class SucursalController {
         });
         
         btnAgregar.addActionListener(ev ->{
-            agregarSucursalSwing();
+            try {
+                agregarSucursalSwing();
+            } catch (SinSentidoException ex) {
+                JOptionPane.showMessageDialog(padre, "El nombre es obligatorio", 
+                    "Aviso", JOptionPane.WARNING_MESSAGE);
+            } catch (RepetidoException ex) {
+                JOptionPane.showMessageDialog(padre, "Ya existía una sucursal con ese nombre.",
+                                     "Aviso", JOptionPane.WARNING_MESSAGE);
+            }
             modeloPersonas.setSucursal(null);
         });
         
@@ -177,7 +188,12 @@ public class SucursalController {
                     "Aviso", JOptionPane.WARNING_MESSAGE);
             }
             else{
-                eliminarSucursalSwing();
+                try {
+                    eliminarSucursalSwing();
+                } catch (SinSentidoException ex) {
+                    JOptionPane.showMessageDialog(padre, "El nombre es obligatorio", 
+                    "Aviso", JOptionPane.WARNING_MESSAGE);
+                }
                 cargarTablaSucursales();
                 modeloPersonas.setSucursal(null); 
             }
@@ -188,7 +204,7 @@ public class SucursalController {
         jdl.setVisible(true);
     }
    
-    private void agregarSucursalSwing(){
+    private void agregarSucursalSwing() throws SinSentidoException, RepetidoException{
         JTextField campoNombre = new JTextField(20);
         JTextField campoRegion = new JTextField(20);
         JTextField campoCiudad = new JTextField(20);
@@ -219,11 +235,8 @@ public class SucursalController {
         
         String nombre = campoNombre.getText().trim();
         
-        //esto puede ser un Exception, para cambiar esto dsp
         if (nombre.isEmpty()) {
-            JOptionPane.showMessageDialog(padre, "El nombre es obligatorio", 
-                    "Aviso", JOptionPane.WARNING_MESSAGE);
-        return;
+            throw new SinSentidoException();
         }
         
         int id = rc.getTotalClaves() + 1;
@@ -238,8 +251,7 @@ public class SucursalController {
             JOptionPane.showMessageDialog(padre, "Sucursal agregada correctamente.");
         }
         else{
-            JOptionPane.showMessageDialog(padre, "Ya existía una sucursal con ese nombre.",
-                                      "Aviso", JOptionPane.WARNING_MESSAGE);
+            throw new RepetidoException();
         }
         cargarTablaSucursales();   
     }
@@ -268,7 +280,7 @@ public class SucursalController {
         
     }
     
-    private void eliminarSucursalSwing(){
+    private void eliminarSucursalSwing() throws SinSentidoException{
         JTextField campoNombre = new JTextField(20);
         
         JPanel panel = new JPanel(new GridLayout(0, 2, 6, 6));
@@ -283,11 +295,8 @@ public class SucursalController {
         
         String nombre = campoNombre.getText().trim();
         
-        //esto puede ser un Exception, para cambiar esto dsp
         if (nombre.isEmpty()) {
-            JOptionPane.showMessageDialog(padre, "El nombre es obligatorio", 
-                    "Aviso", JOptionPane.WARNING_MESSAGE);
-        return;
+            throw new SinSentidoException();
         }
         
         if (rc.eliminarSucursal(nombre))
@@ -323,14 +332,21 @@ public class SucursalController {
             }
         });
         
-        btnAgregar.addActionListener(ev -> emitirCertificadoUI());
+        btnAgregar.addActionListener(ev -> {
+            try {
+                emitirCertificadoUI();
+            } catch (SinSentidoException ex) {
+                JOptionPane.showMessageDialog(padre, "RUT es obligatorio.",
+                "Aviso", JOptionPane.WARNING_MESSAGE);
+            }
+        });
         btnListar.addActionListener(ev -> listarCertificadosUI());
         btnCerrar.addActionListener(ev -> jdl.dispose());
         
         jdl.setVisible(true);
     }
     
-    private void emitirCertificadoUI(){
+    private void emitirCertificadoUI() throws SinSentidoException{
         JTextField campoRut = new JTextField(20);
         
         JComboBox<String> opciones = new JComboBox<>(new String[]{
@@ -352,9 +368,7 @@ public class SucursalController {
         String rut = campoRut.getText().trim();
         
         if (rut.isEmpty()){
-            JOptionPane.showMessageDialog(padre, "RUT es obligatorio.",
-                "Aviso", JOptionPane.WARNING_MESSAGE);
-            return;
+            throw new SinSentidoException();
         }
         
         if (!rc.validarRut(rut)){
@@ -516,7 +530,16 @@ public class SucursalController {
                     "Aviso", JOptionPane.WARNING_MESSAGE);
             }
             else{
-                agregarPersonaSwing();
+                try {
+                    agregarPersonaSwing();
+                } catch (SinSentidoException ex) {
+                    JOptionPane.showMessageDialog(padre, "RUT y Nombre son obligatorios.",
+                        "Aviso", JOptionPane.WARNING_MESSAGE);
+                } catch (InvalidFechaException ex) {
+                    JOptionPane.showMessageDialog(padre, 
+                        "Fecha inválida (usa (dd/mm/aaaa", "Aviso",
+                        JOptionPane.WARNING_MESSAGE);
+                }
                 modeloPersonas.setSucursal(null);
             }
         });
@@ -527,7 +550,16 @@ public class SucursalController {
                     "Aviso", JOptionPane.WARNING_MESSAGE);
             }
             else{
-                modificarPersonaSwing();
+                try {
+                    modificarPersonaSwing();
+                } catch (SinSentidoException ex) {
+                    JOptionPane.showMessageDialog(padre, "Debes ingresar datos en los campos", 
+                    "Aviso", JOptionPane.WARNING_MESSAGE);
+                } catch (InvalidFechaException ex) {
+                    JOptionPane.showMessageDialog(padre, 
+                                "Fecha inválida (usa dd/mm/aaaa)", "Aviso",
+                                JOptionPane.WARNING_MESSAGE);
+                }
                 cargarTablaSucursales();
                 modeloPersonas.setSucursal(null);
             }
@@ -539,7 +571,12 @@ public class SucursalController {
                     "Aviso", JOptionPane.WARNING_MESSAGE);
             }
             else{
-                eliminarPersonaSwing();
+                try {
+                    eliminarPersonaSwing();
+                } catch (SinSentidoException ex) {
+                    JOptionPane.showMessageDialog(padre, "RUT es obligatorio",
+                        "Aviso", JOptionPane.WARNING_MESSAGE);
+                }
                 cargarTablaSucursales();
                 modeloPersonas.setSucursal(null);
             }
@@ -550,7 +587,7 @@ public class SucursalController {
         jdl.setVisible(true);
     }
     
-    private void agregarPersonaSwing(){
+    private void agregarPersonaSwing() throws SinSentidoException, InvalidFechaException{
         JTextField campoRut = new JTextField(12);
         JTextField campoNombre = new JTextField(20);
         JTextField campoFecha = new JTextField(10);
@@ -596,9 +633,7 @@ public class SucursalController {
         String nombre = campoNombre.getText().trim();
         
         if (rut.isEmpty() || nombre.isEmpty()){
-            JOptionPane.showMessageDialog(padre, "RUT y Nombre son obligatorios.",
-                "Aviso", JOptionPane.WARNING_MESSAGE);
-            return;
+            throw new SinSentidoException();
         }
         
         Fecha fn = null;
@@ -612,16 +647,11 @@ public class SucursalController {
                     int año = Integer.parseInt(p[2]);
                     fn = new Fecha(dia, mes, año);
                 }catch(NumberFormatException e){
-                    JOptionPane.showMessageDialog(padre, 
-                            "Fecha inválida (usa (dd/mm/aaaa", "Aviso",
-                            JOptionPane.WARNING_MESSAGE);
-                    return;
+                    throw new InvalidFechaException();
                 }
             }
             else{
-                JOptionPane.showMessageDialog(padre, "Fecha inválida (usa dd/mm/aaaa).",
-                    "Aviso", JOptionPane.WARNING_MESSAGE);
-                return;
+                throw new InvalidFechaException();
             }
         }
         
@@ -651,7 +681,7 @@ public class SucursalController {
         
     }
     
-    private void modificarPersonaSwing(){
+    private void modificarPersonaSwing() throws SinSentidoException, InvalidFechaException{
         JTextField campoRut = new JTextField(12);
         JTextField campoRutPareja = new JTextField(12);
         JTextField campoFechaCasamiento = new JTextField(12);
@@ -721,9 +751,7 @@ public class SucursalController {
 
         String rut = campoRut.getText().trim();
         if (rut.isEmpty()) {
-            JOptionPane.showMessageDialog(padre, "Debes ingresar el RUT.", 
-                    "Aviso", JOptionPane.WARNING_MESSAGE);
-            return;
+            throw new SinSentidoException();
         }
         
         
@@ -732,10 +760,7 @@ public class SucursalController {
         if ("Casarse".equals(accion)) {
             String rutPareja = campoRutPareja.getText().trim();
             if (rutPareja.isEmpty()) {
-                JOptionPane.showMessageDialog(padre, 
-                        "Debes ingresar el RUT de la pareja.", "Aviso",
-                        JOptionPane.WARNING_MESSAGE);
-                return;
+                throw new SinSentidoException();
             }
             
             Archivo persona = null, pareja = null;
@@ -768,16 +793,11 @@ public class SucursalController {
                         int año = Integer.parseInt(p[2]);
                         fn = new Fecha(dia, mes, año);
                     }catch(NumberFormatException e){
-                        JOptionPane.showMessageDialog(padre, 
-                                "Fecha inválida (usa dd/mm/aaaa)", "Aviso",
-                                JOptionPane.WARNING_MESSAGE);
-                        return;
+                        throw new InvalidFechaException();
                     }
                 }
             else{
-                JOptionPane.showMessageDialog(padre, "Fecha inválida (usa dd/mm/aaaa).",
-                    "Aviso", JOptionPane.WARNING_MESSAGE);
-                return;
+                throw new InvalidFechaException();
                 }
             }
             
@@ -843,27 +863,20 @@ public class SucursalController {
                         int año = Integer.parseInt(p[2]);
                         fn = new Fecha(dia, mes, año);
                     }catch(NumberFormatException e){
-                        JOptionPane.showMessageDialog(padre, 
-                                "Fecha inválida (usa dd/mm/aaaa)", "Aviso",
-                                JOptionPane.WARNING_MESSAGE);
-                        return;
+                        throw new InvalidFechaException();
                     }
                 }
             else{
-                JOptionPane.showMessageDialog(padre, "Fecha inválida (usa dd/mm/aaaa).",
-                    "Aviso", JOptionPane.WARNING_MESSAGE);
-                return;
+                throw new InvalidFechaException();
                 }
             }
             
             persona.fallecimiento(fn);
-            
-            
         }
         
     }
     
-    private void eliminarPersonaSwing(){
+    private void eliminarPersonaSwing() throws SinSentidoException{
         JTextField campoRut = new JTextField(12);
         JPanel panel = new JPanel(new GridLayout(0, 2, 6, 6));
         panel.add(new JLabel("RUT a buscar:"));          
@@ -878,9 +891,7 @@ public class SucursalController {
         String rut = campoRut.getText().trim();
         
         if (rut.isEmpty()){
-            JOptionPane.showMessageDialog(padre, "RUT es obligatorio",
-                "Aviso", JOptionPane.WARNING_MESSAGE);
-            return;
+            throw new SinSentidoException();
         } 
         
         if (!rc.validarRut(rut)){
@@ -931,10 +942,12 @@ public class SucursalController {
         JButton guarSucCsv = new JButton("Guardar datos de sucursales en CSV");
         JButton guarPerCsv = new JButton("Guardar datos de personas en CSV");
         JButton guarCerCsv = new JButton("Guardar datos de certificados en CSV");
+        JButton reporte = new JButton("Generar Reporte");
         
         jdl.add(guarSucCsv);
         jdl.add(guarPerCsv);
         jdl.add(guarCerCsv);
+        jdl.add(reporte);
         
         guarSucCsv.addActionListener(e -> {
             try{
@@ -972,6 +985,19 @@ public class SucursalController {
                     "Aviso", JOptionPane.WARNING_MESSAGE);
             }
         });
+        
+        reporte.addActionListener(e ->{
+            try{
+                gestor.generarReporte(rc);
+                JOptionPane.showMessageDialog(padre, 
+                        "Reporte generado con exito");
+            }catch(IOException ex){
+                JOptionPane.showMessageDialog(padre, 
+                        "No se pudo generar el reporte",
+                    "Aviso", JOptionPane.WARNING_MESSAGE);
+            }
+        });
+        
         jdl.setVisible(true);
     }
 }

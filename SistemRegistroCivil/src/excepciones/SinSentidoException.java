@@ -5,13 +5,11 @@
 package excepciones;
 
 /**
- * Función destinada al dato de las personas en temas de matrimonio.
- * Sirve a la hora de divorciar estando soltero, casar estando casado o viudar
- * estando soltero, etc.
+ * Función destinada al dato de casillas vacias
  * @author franc
  */
 public class SinSentidoException extends Exception{
     public SinSentidoException(){
-        super("Su acción no tiene sentido con los datos actuales.");
+        super("La casilla se encuentra vacia");
     }
 }

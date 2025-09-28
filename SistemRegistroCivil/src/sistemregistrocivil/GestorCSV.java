@@ -208,4 +208,21 @@ public class GestorCSV {
         osw.close();
         fos.close();
     }
+    
+    public void generarReporte(RegistroCivil rc) throws IOException{
+        File archivo = new File("src/datos/reporte.csv");
+        FileOutputStream fos = new FileOutputStream(archivo, false);
+        OutputStreamWriter osw = new OutputStreamWriter(fos, StandardCharsets.UTF_8);
+        BufferedWriter bw = new BufferedWriter(osw);
+        PrintWriter pw = new PrintWriter(bw);
+        
+        pw.println("Total sucursales registradas: " + rc.getTotalClaves());
+        pw.println("Total de personas registradas: " + rc.getTotalPersonas());
+        pw.println("Total de certificados registrados: " + rc.getTotalCertificados());
+        
+        pw.close();
+        bw.close();
+        osw.close();
+        fos.close();
+    }
 }
