@@ -45,3 +45,5 @@ Notas importantes
 Los archivos CSV deben estar en la carpeta:
 
 src/datos/
+
+Si ocurre un error con la carga de datos, verifique que los archivos.csv esten guardados en formato CSV UTF-8 (delimitado por comas)
