@@ -13,7 +13,7 @@ public class Fecha {
     private int dia;
     private int mes;
     private int año;
-
+//genera la EXCEPCION FechaInexistenteException si no existe la fecha (30/02/2000)
     public Fecha(int dia, int mes, int año) {
         this.dia = dia;
         this.mes = mes;
