@@ -2,9 +2,7 @@
 package sistemregistrocivil.controller;
 
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.*;
@@ -140,16 +138,18 @@ public class SucursalController {
     private void abrirSubmenuSucursales(){
         JDialog jdl = new JDialog(padre, "Administrar sucursales", true);
         jdl.setLayout(new GridLayout(0,1,8,8));
-        jdl.setSize(320, 200);
+        jdl.setSize(320, 290);
         jdl.setLocationRelativeTo(padre);
         
         JButton btnCsv = new JButton("Cargar sucursales vía CSV ");
         JButton btnAgregar = new JButton("Agregar nueva sucursal");
+        JButton btnBuscar = new JButton("Buscar Sucursal");
         JButton btnEliminar = new JButton("Eliminar sucursal");
         JButton btnCerrar = new JButton("Cerrar");
         
         jdl.add(btnCsv);
         jdl.add(btnAgregar);
+        jdl.add(btnBuscar);
         jdl.add(btnEliminar);
         jdl.add(btnCerrar);
         
@@ -168,6 +168,8 @@ public class SucursalController {
             agregarSucursalSwing();
             modeloPersonas.setSucursal(null);
         });
+        
+        btnBuscar.addActionListener(ev -> buscarSucursalSwing());
         
         btnEliminar.addActionListener(ev ->{
             if (rc.getTotalClaves() == 0){
@@ -240,6 +242,30 @@ public class SucursalController {
                                       "Aviso", JOptionPane.WARNING_MESSAGE);
         }
         cargarTablaSucursales();   
+    }
+    
+    private void buscarSucursalSwing(){
+        ArrayList<String> opciones = rc.getClavesSucursales();
+        DefaultComboBoxModel<String> model = 
+                new DefaultComboBoxModel<>(opciones.toArray(new String[0]));
+        
+        JComboBox<String> combo = new JComboBox<>(model);
+        
+        JPanel panel = new JPanel(new GridLayout(0, 2, 6, 6));
+        panel.add(new JLabel("Sucursales:"));
+        panel.add(combo);
+        
+        int confirmacion = JOptionPane.showConfirmDialog(padre, panel, 
+                "Buscar sucursal", 
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        
+        if (confirmacion != JOptionPane.OK_OPTION) return;
+        
+        String nombreSuc = (String) combo.getSelectedItem();
+        
+        Sucursal suc = rc.getSucursal(nombreSuc);
+        verDetallesSucursal(suc);
+        
     }
     
     private void eliminarSucursalSwing(){
