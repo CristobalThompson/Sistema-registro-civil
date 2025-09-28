@@ -149,6 +149,15 @@ public class PersonaController {
                 p.getNacimiento().getMes() + "/" +
                 p.getNacimiento().getAño();
         }
+        
+        String fal;
+        if (p.getDefuncion() == null){
+            fal = "";
+        } else{
+            fal = "Fallecimiento: " + p.getDefuncion().getDia() + "/" +
+                    p.getDefuncion().getMes() + "/" +
+                    p.getDefuncion().getAño() + "\n";
+        }
 
         String nombre = (p.getNombre() == null) ? "—" : p.getNombre();
         String rut    = (p.getRut()    == null) ? "—" : p.getRut();
@@ -158,7 +167,8 @@ public class PersonaController {
             "Nombre: " + nombre + "\n" +
             "RUT: "    + rut    + "\n" +
             "Nacimiento: " + nac + "\n" +
-                "Estado civil: " + civil,
+             fal +
+            "Estado civil: " + civil,
         "Persona", JOptionPane.INFORMATION_MESSAGE
         );
     }

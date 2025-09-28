@@ -3,6 +3,7 @@ package sistemregistrocivil.controller;
 
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,8 +18,10 @@ public class SucursalController {
     private final JFrame padre;
     private final RegistroCivil rc;
     private final GestorCSV gestor;
+    
     private boolean datosCargadosP;
     private boolean datosCargadosS;
+    private boolean datosCargadosC;
     
     private final JTable tablaSucursales;
     private final JTable tablaPersonas;
@@ -52,6 +55,7 @@ public class SucursalController {
         
         datosCargadosP = false;
         datosCargadosS = false;
+        datosCargadosC = false;
     }
     
     public void conectarVistaControlador(){
@@ -90,6 +94,16 @@ public class SucursalController {
         }
         gestor.cargarCsvSucursales(rc);
         datosCargadosS = true;
+        JOptionPane.showMessageDialog(padre, "Datos cargados correctamente.");
+    }
+    
+    private void cargarDatosC() throws IOException{
+        if (datosCargadosC){
+            JOptionPane.showMessageDialog(padre, "Los datos ya estaban cargados.");
+            return;
+        }
+        gestor.cargarCertificados(rc);
+        datosCargadosC = true;
         JOptionPane.showMessageDialog(padre, "Datos cargados correctamente.");
     }
     
@@ -259,20 +273,35 @@ public class SucursalController {
     }
     
     private void abrirSubmenuCertificados(){
-        String[] ops = {"Emitir", "Listar", "Cerrar"};
-        String op = (String) JOptionPane.showInputDialog(
-            padre, "Elige", "Certificados",
-            JOptionPane.QUESTION_MESSAGE, null, ops, ops[0]);
-        if (op == null || op.equals("Cerrar")) return;
+        JDialog jdl = new JDialog(padre, "Administrar certificados", true);
+        jdl.setLayout(new GridLayout(0,1,8,8));
+        jdl.setSize(390, 300);
+        jdl.setLocationRelativeTo(padre);
         
-        switch(op){
-            case "Emitir" :
-                emitirCertificadoUI();
-                break;
-            case "Listar" :
-                listarCertificadosUI();
-                break;
-        }
+        JButton btnCsv = new JButton("Cargar certificados vía CSV");
+        JButton btnAgregar = new JButton("Emitir nuevo certificado");
+        JButton btnListar = new JButton("Mostrar certificados");
+        JButton btnCerrar = new JButton("Cerrar");
+        
+        jdl.add(btnCsv);
+        jdl.add(btnAgregar);
+        jdl.add(btnListar);
+        jdl.add(btnCerrar);
+        
+        btnCsv.addActionListener(ev ->{
+            try{
+                cargarDatosC();
+                jdl.dispose();
+            }catch(IOException ex){
+                JOptionPane.showMessageDialog(padre, "No se pudo cargar los certificados");
+            }
+        });
+        
+        btnAgregar.addActionListener(ev -> emitirCertificadoUI());
+        btnListar.addActionListener(ev -> listarCertificadosUI());
+        btnCerrar.addActionListener(ev -> jdl.dispose());
+        
+        jdl.setVisible(true);
     }
     
     private void emitirCertificadoUI(){
@@ -356,12 +385,12 @@ public class SucursalController {
         
         JFrame ventanaCertificados = new JFrame("Certificados");
         ventanaCertificados.setSize(600, 400);
-        ventanaCertificados.setLocationRelativeTo(null);
+        ventanaCertificados.setLocationRelativeTo(padre);
         ventanaCertificados.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
-        ventanaCertificados.add(scrollPane, BorderLayout.CENTER);
-        ventanaCertificados.setVisible(true);
         
+        ventanaCertificados.add(scrollPane, BorderLayout.CENTER);
+        ventanaCertificados.pack();
+        ventanaCertificados.setVisible(true);
         
         MenuContextualCertificados popupCertificados = new MenuContextualCertificados(
             () -> {
@@ -376,7 +405,7 @@ public class SucursalController {
         );
 
         MenuContextualCertificados.instalarEnTabla(tablaCertificados, popupCertificados);
-
+        ventanaCertificados.setVisible(true);
     }
     
     private void mostrarDetallesCertificado(Certificado certi){
@@ -490,7 +519,7 @@ public class SucursalController {
             }
         });
         
-        btnCerrar.addActionListener(ev -> jdl.dispose()); //cerrar jdl
+        btnCerrar.addActionListener(ev -> jdl.dispose());
         
         jdl.setVisible(true);
     }
@@ -597,7 +626,215 @@ public class SucursalController {
     }
     
     private void modificarPersonaSwing(){
-        //casarse o declarar fallecido
+        JTextField campoRut = new JTextField(12);
+        JTextField campoRutPareja = new JTextField(12);
+        JTextField campoFechaCasamiento = new JTextField(12);
+        JTextField campoFechaFallecimiento = new JTextField(12);
+        JPanel panel = new JPanel(new GridLayout(0, 2, 6, 6));
+        JComboBox<String> cbAccion = new JComboBox<>(
+                new String[]{"Divorciarse", "Declarar fallecido", "Casarse"});
+        
+        JPanel row1 = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 4));
+        row1.add(new JLabel("RUT persona:"));
+        row1.add(campoRut);
+        
+        JPanel row2 = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 4));
+        row2.add(new JLabel("Acción:"));
+        row2.add(cbAccion);
+        
+        JPanel rowPareja = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 4));
+        rowPareja.add(new JLabel("RUT pareja:"));
+        rowPareja.add(campoRutPareja);
+        rowPareja.setVisible(false);
+        
+        JPanel fechaCasamiento = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 4));
+        fechaCasamiento.add(new JLabel("fecha de casamiento (dd/mm/aaaa):"));
+        fechaCasamiento.add(campoFechaCasamiento);
+        fechaCasamiento.setVisible(false);
+        
+        JPanel fechaFallecimiento = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 4));
+        fechaFallecimiento.add(new JLabel("fecha de fallecimiento (dd/mm/aaaa):"));
+        fechaFallecimiento.add(campoFechaFallecimiento);
+        fechaFallecimiento.setVisible(false);
+        
+        JPanel form = new JPanel();
+        form.setLayout(new BoxLayout(form, BoxLayout.Y_AXIS));
+        form.add(row1);
+        form.add(row2);
+        form.add(rowPareja);
+        form.add(fechaCasamiento);
+        form.add(fechaFallecimiento);
+        
+        cbAccion.addActionListener(e -> {
+            boolean casarse = "Casarse".equals(cbAccion.getSelectedItem());
+            rowPareja.setVisible(casarse);
+            fechaCasamiento.setVisible(casarse);
+            
+            
+            form.revalidate();
+            form.repaint();
+            java.awt.Window w = SwingUtilities.getWindowAncestor(form);
+            if (w != null) w.pack();
+        });
+        
+        cbAccion.addActionListener(e -> {
+            boolean fallecimiento = "Declarar fallecido".equals(cbAccion.getSelectedItem());
+            fechaFallecimiento.setVisible(fallecimiento);
+            
+            
+            form.revalidate();
+            form.repaint();
+            java.awt.Window w = SwingUtilities.getWindowAncestor(form);
+            if (w != null) w.pack();
+        });
+        
+        int confirmacion = JOptionPane.showConfirmDialog(
+            padre, form, "Modificar persona",
+            JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        if (confirmacion != JOptionPane.OK_OPTION) return;
+
+        String rut = campoRut.getText().trim();
+        if (rut.isEmpty()) {
+            JOptionPane.showMessageDialog(padre, "Debes ingresar el RUT.", 
+                    "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        
+        String accion = (String) cbAccion.getSelectedItem();
+        
+        if ("Casarse".equals(accion)) {
+            String rutPareja = campoRutPareja.getText().trim();
+            if (rutPareja.isEmpty()) {
+                JOptionPane.showMessageDialog(padre, 
+                        "Debes ingresar el RUT de la pareja.", "Aviso",
+                        JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            
+            Archivo persona = null, pareja = null;
+            for (int i = 0; i < rc.getTotalClaves(); ++i){
+                Sucursal suc = rc.getSucursal(i);
+                if (persona == null)
+                    persona = suc.getArchivo(rut);
+                
+                if (pareja == null)
+                    pareja = suc.getArchivo(rutPareja);
+                
+                if (persona != null && pareja != null) break;
+            }
+            
+            if (persona == null || pareja == null) {
+                JOptionPane.showMessageDialog(padre, 
+                        "Algunos de los ruts ingresados no estan registrados", 
+                        "Aviso",JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            
+            Fecha fn = null;
+            String fechaText = campoFechaCasamiento.getText().trim();
+            if (!fechaText.isEmpty()){
+                String[] p = fechaText.split("[/.-]");
+                if (p.length == 3){
+                    try{
+                        int dia = Integer.parseInt(p[0]);
+                        int mes = Integer.parseInt(p[1]);
+                        int año = Integer.parseInt(p[2]);
+                        fn = new Fecha(dia, mes, año);
+                    }catch(NumberFormatException e){
+                        JOptionPane.showMessageDialog(padre, 
+                                "Fecha inválida (usa dd/mm/aaaa)", "Aviso",
+                                JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
+                }
+            else{
+                JOptionPane.showMessageDialog(padre, "Fecha inválida (usa dd/mm/aaaa).",
+                    "Aviso", JOptionPane.WARNING_MESSAGE);
+                return;
+                }
+            }
+            
+            if (!persona.casarse(pareja, fn)){
+                JOptionPane.showMessageDialog(padre, "Ocurrio un error.",
+                    "Aviso", JOptionPane.WARNING_MESSAGE);
+            }
+            else{
+                JOptionPane.showMessageDialog(padre, "Se caso correctamente.", 
+                        "Aviso", JOptionPane.INFORMATION_MESSAGE);
+            }
+            
+        } 
+        else if("Divorciarse".equals(accion)){
+            Archivo persona = null;
+            for (int i = 0; i < rc.getTotalClaves(); ++i){
+                Sucursal suc = rc.getSucursal(i);
+                persona = suc.getArchivo(rut);
+                if (persona != null) break;
+            }
+            
+            if (persona == null) {
+                JOptionPane.showMessageDialog(padre, 
+                        "El rut ingresado no esta registrado", 
+                        "Aviso",JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            
+            if (!persona.divorcio()){
+                JOptionPane.showMessageDialog(padre, "Ocurrio un error.",
+                    "Aviso", JOptionPane.WARNING_MESSAGE);
+            }
+            else{
+                JOptionPane.showMessageDialog(padre, "Se divorcio correctamente.", 
+                        "Aviso", JOptionPane.INFORMATION_MESSAGE);
+            }
+            
+        }
+        else{
+            
+            Archivo persona = null;
+            for (int i = 0; i < rc.getTotalClaves(); ++i){
+                Sucursal suc = rc.getSucursal(i);
+                persona = suc.getArchivo(rut);
+                if (persona != null) break;
+            }
+            
+            if (persona == null) {
+                JOptionPane.showMessageDialog(padre, 
+                        "El rut ingresado no esta registrado", 
+                        "Aviso",JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            
+            Fecha fn = null;
+            String fechaText = campoFechaFallecimiento.getText().trim();
+            if (!fechaText.isEmpty()){
+                String[] p = fechaText.split("[/.-]");
+                if (p.length == 3){
+                    try{
+                        int dia = Integer.parseInt(p[0]);
+                        int mes = Integer.parseInt(p[1]);
+                        int año = Integer.parseInt(p[2]);
+                        fn = new Fecha(dia, mes, año);
+                    }catch(NumberFormatException e){
+                        JOptionPane.showMessageDialog(padre, 
+                                "Fecha inválida (usa dd/mm/aaaa)", "Aviso",
+                                JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
+                }
+            else{
+                JOptionPane.showMessageDialog(padre, "Fecha inválida (usa dd/mm/aaaa).",
+                    "Aviso", JOptionPane.WARNING_MESSAGE);
+                return;
+                }
+            }
+            
+            persona.fallecimiento(fn);
+            
+            
+        }
+        
     }
     
     private void eliminarPersonaSwing(){

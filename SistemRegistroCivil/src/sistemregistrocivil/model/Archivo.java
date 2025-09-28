@@ -13,7 +13,6 @@ package sistemregistrocivil.model;
 import sistemregistrocivil.model.Persona;
 import sistemregistrocivil.model.Ubicacion;
 import sistemregistrocivil.model.Sucursal;
-import java.util.*;
 
 public class Archivo {
     private Persona persona;
@@ -125,28 +124,46 @@ public class Archivo {
     }
     
     public boolean divorcio(){
-        
-        Fecha vacia = new Fecha(0,0,0);
-        
-        
+     
         Archivo otro = this.conyuge;
-        
-        if (this.persona != null)
-            persona.setEstadoCivil("Soltero/a");
-        
-        this.setFechaCasamiento(vacia);
+        if (otro == null) return false;
+
+
+        Persona p1 = this.persona;
+        Persona p2 = otro.getPersona();
+
+
         this.conyuge = null;
-        
-        if (otro != null){
-            
-            otro.setFechaCasamiento(vacia);
-            
-            if (conyuge.getPersona() != null)
-                (conyuge.getPersona()).setEstadoCivil("Soltero/a");
-            if (otro.getConyuge() == this) otro.conyuge = null;
-            
+        if (otro.getConyuge() == this) {
+            otro.conyuge = null; 
         }
+
+
+        Fecha vacia = new Fecha(0, 0, 0); 
+        this.setFechaCasamiento(vacia);
+        otro.setFechaCasamiento(vacia);
+       
+        if (p1 != null) p1.setEstadoCivil("Divorciado/a"); 
+        if (p2 != null) p2.setEstadoCivil("Divorciado/a");
+
+        return true;
+    }
+    
+    public boolean fallecimiento(Fecha ff){
+        if ("Fallecido/a".equalsIgnoreCase(persona.getCivil())) return false;
+        persona.setEstadoCivil("Fallecido/a");
+        persona.setFechaDefuncion(ff);
         
+        Archivo otro = conyuge;
+        if (otro != null){
+            Persona p2 = otro.getPersona();
+            if (p2 != null) p2.setEstadoCivil("Viudo/a");
+
+            if (otro.getConyuge() == this) {
+                otro.conyuge = null;
+            }
+            this.conyuge = null;
+        }
         return true;
     }
     
