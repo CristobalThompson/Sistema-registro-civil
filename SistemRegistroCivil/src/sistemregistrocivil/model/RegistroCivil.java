@@ -62,6 +62,10 @@ public class RegistroCivil {
         return sucursales;
     }
     
+    public ArrayList<Certificado> getListaCertificados(){
+        return certificados;
+    }
+    
     public ArrayList<String> getClavesSucursales(){
         return clavesSucursales;
     }

@@ -2,6 +2,7 @@
 package sistemregistrocivil.controller;
 
 
+import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
 import sistemregistrocivil.GestorCSV;
 import sistemregistrocivil.model.*;
+import sistemregistrocivil.view.popup.MenuContextualCertificados;
 import sistemregistrocivil.view.table.*;
 
 public class SucursalController {
@@ -22,25 +24,32 @@ public class SucursalController {
     private final JTable tablaPersonas;
     private final SucursalesTableModel modeloSucursales;
     private final PersonasTableModel modeloPersonas;
+    private final CertificadosTableModel modeloCertificados;
     
     private final JButton btnSucursales, btnPersonas, btnGuardar, btnCertificados;
 
     public SucursalController(JFrame padre, 
             RegistroCivil rc, GestorCSV gestor, JTable tablaSucursales, 
             JTable tablaPersonas, SucursalesTableModel modeloSucursales, 
-            PersonasTableModel modeloPersonas, JButton btnSucursales, 
+            PersonasTableModel modeloPersonas, 
+            CertificadosTableModel modeloCertificados, JButton btnSucursales, 
             JButton btnPersonas, JButton btnGuardar, JButton btnCertificados) {
+        
         this.padre = padre;
         this.rc = rc;
         this.gestor = gestor;
+        
         this.tablaSucursales = tablaSucursales;
         this.tablaPersonas = tablaPersonas;
+        
         this.modeloSucursales = modeloSucursales;
         this.modeloPersonas = modeloPersonas;
+        this.modeloCertificados = modeloCertificados;
         this.btnSucursales = btnSucursales;
         this.btnPersonas = btnPersonas;
         this.btnCertificados = btnCertificados;
         this.btnGuardar = btnGuardar;
+        
         datosCargadosP = false;
         datosCargadosS = false;
     }
@@ -342,7 +351,79 @@ public class SucursalController {
     }
     
     private void listarCertificadosUI(){
+        JTable tablaCertificados = new JTable(modeloCertificados);
+        JScrollPane scrollPane = new JScrollPane(tablaCertificados);
         
+        JFrame ventanaCertificados = new JFrame("Certificados");
+        ventanaCertificados.setSize(600, 400);
+        ventanaCertificados.setLocationRelativeTo(null);
+        ventanaCertificados.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        ventanaCertificados.add(scrollPane, BorderLayout.CENTER);
+        ventanaCertificados.setVisible(true);
+        
+        
+        MenuContextualCertificados popupCertificados = new MenuContextualCertificados(
+            () -> {
+                int fila = tablaCertificados.getSelectedRow();
+                if (fila < 0) return null;
+                int filaModelo = tablaCertificados.convertRowIndexToModel(fila);
+                return modeloCertificados.getAt(filaModelo);
+            },
+            certificado -> {
+                mostrarDetallesCertificado(certificado);
+            }
+        );
+
+        MenuContextualCertificados.instalarEnTabla(tablaCertificados, popupCertificados);
+
+    }
+    
+    private void mostrarDetallesCertificado(Certificado certi){
+        
+        switch(certi.getNombreCertificado()){
+            case  "Certificado de nacimiento" :
+                CertificadoNacimiento nuevoN = (CertificadoNacimiento) certi;
+                JOptionPane.showMessageDialog(padre,
+                "Nombre: " + nuevoN.getNombrePersona() + "\n" +
+                "Rut: " + nuevoN.getRut() + "\n" +
+                "Fecha de nacimiento: " + nuevoN.getNacimiento().getDia() + "/" +
+                        nuevoN.getNacimiento().getMes() + "/" + 
+                        nuevoN.getNacimiento().getAño() + "\n" +
+                "Fecha de emisión: " + nuevoN.getEmision().getDia() + "/" + 
+                        nuevoN.getEmision().getMes() + "/" + 
+                        nuevoN.getEmision().getAño(),
+                "Certificado de nacimiento", JOptionPane.INFORMATION_MESSAGE);
+                break;
+            case "Certificado de defusión" :
+                CertificadoDefusion nuevoF = (CertificadoDefusion)  certi;
+                JOptionPane.showMessageDialog(padre,
+                "Nombre: " + nuevoF.getNombrePersona() + "\n" +
+                "Rut: " + nuevoF.getRut() + "\n" +
+                "Fecha de defución: " + nuevoF.getDefucion().getDia() + "/" +
+                        nuevoF.getDefucion().getMes() + "/" + 
+                        nuevoF.getDefucion().getAño() + "\n" +
+                "Fecha de emisión: " + nuevoF.getEmision().getDia() + "/" + 
+                        nuevoF.getEmision().getMes() + "/" + 
+                        nuevoF.getEmision().getAño(),
+                "Certificado de defución", JOptionPane.INFORMATION_MESSAGE);
+                break;
+            case "Certificado de matrimonio" :
+                CertificadoMatrimonio nuevoM = (CertificadoMatrimonio) certi;
+                Fecha fechaM = nuevoM.getFechaCasamiento();
+                JOptionPane.showMessageDialog(padre,
+                "Nombre: " + nuevoM.getNombrePersona() + "\n" +
+                "Rut: " + nuevoM.getRut() + "\n\n" +
+                "Nombre conyuge: " + nuevoM.getNombreconyuge() + "\n" +
+                "Rut conyuge: " + nuevoM.getRutConyuge() + "\n\n" +       
+                "Fecha de matrimonio: " + fechaM.getDia() + "/" + fechaM.getMes()
+                        + "/" + fechaM.getAño() + "\n\n" +
+                "Fecha de emisión: " + nuevoM.getEmision().getDia() + "/" + 
+                        nuevoM.getEmision().getMes() + "/" + 
+                        nuevoM.getEmision().getAño(),
+                "Certificado de matrimonio", JOptionPane.INFORMATION_MESSAGE);
+                break;
+        }
     }
     
     private void abrirSubMenuPersonas(){

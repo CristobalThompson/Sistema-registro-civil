@@ -32,9 +32,11 @@ public class Menu extends JFrame {
     
     private final JTable tabla = new JTable(); //tabla para mostrar datos
     private final JTable tablaPersonas = new JTable(); //tabla para personas por sucursal
+    private final JTable tablaCertificados = new JTable();
     
     private final SucursalesTableModel modeloTabla;
     private final PersonasTableModel modeloPersonas;
+    private final CertificadosTableModel modeloCertificados;
     
     
     public Menu(RegistroCivil rc){
@@ -47,6 +49,7 @@ public class Menu extends JFrame {
         
         modeloTabla = new SucursalesTableModel(rc);
         modeloPersonas = new PersonasTableModel();
+        modeloCertificados = new CertificadosTableModel(rc);
         
         btnCargar = new JButton("Administrar Sucursales");
         btnPersonas = new JButton("Administrar Personas");
@@ -62,11 +65,12 @@ public class Menu extends JFrame {
         
         tabla.setModel(modeloTabla);
         tablaPersonas.setModel(modeloPersonas);
+        tablaCertificados.setModel(modeloCertificados);
      
         add(new PanelTablas(tabla, tablaPersonas), BorderLayout.CENTER); //agrega las tablas al centro y permite usar scroll del mouse
         
         sucController = new SucursalController(this, rc, gestor,
-                        tabla, tablaPersonas, modeloTabla, modeloPersonas,
+                        tabla, tablaPersonas, modeloTabla, modeloPersonas, modeloCertificados,
                         btnCargar, btnPersonas, btnGuardar, btnCertificados);
         
         sucController.conectarVistaControlador();

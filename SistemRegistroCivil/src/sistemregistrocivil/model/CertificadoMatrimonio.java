@@ -43,5 +43,18 @@ public class CertificadoMatrimonio extends Certificado{
                 mesE + "," +
                 añoE;
     }
+
+    public String getNombreconyuge() {
+        return Nombreconyuge;
+    }
+
+    public String getRutConyuge() {
+        return RutConyuge;
+    }
+
+    public Fecha getFechaCasamiento() {
+        return fechaCasamiento;
+    }
+    
     
 }

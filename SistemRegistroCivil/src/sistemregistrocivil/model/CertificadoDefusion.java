@@ -36,4 +36,7 @@ public class CertificadoDefusion extends Certificado{
                 añoE;
     }
     
+    public Fecha getDefucion(){
+        return fallecimiento;
+    }
 }

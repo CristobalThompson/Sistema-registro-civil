@@ -8,6 +8,10 @@ public class CertificadoNacimiento extends Certificado{
         super("Certificado de nacimiento", nombre, rut);
         fechaNac = naci;
     }
+    
+    public Fecha getNacimiento(){
+        return fechaNac;
+    }
 
     @Override
     public String generarLinea() {
