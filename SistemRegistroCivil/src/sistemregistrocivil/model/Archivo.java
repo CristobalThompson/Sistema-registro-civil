@@ -18,7 +18,6 @@ import java.util.*;
 public class Archivo {
     private Persona persona;
     private Ubicacion direccion;
-    private ArrayList<Certificado> certificados = new ArrayList<>();
     private Sucursal sucursal;
     private Fecha fechaCasamiento;
     private Archivo conyuge;
@@ -151,28 +150,21 @@ public class Archivo {
         return true;
     }
     
+    public CertificadoNacimiento generarNacimiento(){
+        return new 
+            CertificadoNacimiento(persona.getNombre(),
+            persona.getRut(), persona.getNacimiento());
+    }
     
-    public Certificado generarCertificado(byte opcion){
-        
-        if (opcion != 1 && opcion != 2 && opcion != 3) return null;
-        
-        
-        if (opcion == 1 && !this.esCasado()) return null;
-        
-        
-        
-        
-        Certificado certificado = new Certificado();
-        
-        certificado.setPersona(this.persona);
-        certificado.setConyuge(this.conyuge);
-        certificado.setFechaC(this.fechaCasamiento);
-        
-        if (certificado.crearCertificado(opcion)){
-            certificados.add(certificado);
-            return certificado;
-        }
-        return null;
-        
+    public CertificadoMatrimonio generarMatrimonio(){
+        if (fechaCasamiento  == null || conyuge == null) return null;
+        return new CertificadoMatrimonio(persona.getNombre(), persona.getRut(), 
+        conyuge.getPersona().getNombre(), conyuge.getPersona().getRut(), fechaCasamiento);
+    }
+    
+    public CertificadoDefusion generarDefusion(){
+        if (persona.getDefuncion() == null) return null;
+        return new CertificadoDefusion(persona.getNombre(), persona.getRut(), 
+                                        persona.getDefuncion());
     }
 }

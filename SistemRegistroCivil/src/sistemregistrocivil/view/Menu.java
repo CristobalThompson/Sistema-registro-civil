@@ -27,6 +27,7 @@ public class Menu extends JFrame {
     
     private final JButton btnCargar; //botones
     private final JButton btnPersonas;
+    private final JButton btnCertificados;
     private final JButton btnGuardar;
     
     private final JTable tabla = new JTable(); //tabla para mostrar datos
@@ -49,6 +50,7 @@ public class Menu extends JFrame {
         
         btnCargar = new JButton("Administrar Sucursales");
         btnPersonas = new JButton("Administrar Personas");
+        btnCertificados = new JButton("Administrar certificados");
         btnGuardar = new JButton("Guardar datos");
         
         setDefaultCloseOperation(EXIT_ON_CLOSE); //indica que cuando se cierre la ventana, se finalize con exito la ejecucion
@@ -56,7 +58,7 @@ public class Menu extends JFrame {
         setLocationRelativeTo(null); //centra la ventana en la pantalla
         setLayout(new BorderLayout()); //divide la ventana en 5 zonas: NORTH, SOUTH, CENTER, EAST, WEST.
         
-        add(new BarraSuperior(btnCargar, btnPersonas, btnGuardar), BorderLayout.NORTH);
+        add(new BarraSuperior(btnCargar, btnPersonas, btnCertificados, btnGuardar), BorderLayout.NORTH);
         
         tabla.setModel(modeloTabla);
         tablaPersonas.setModel(modeloPersonas);
@@ -65,7 +67,7 @@ public class Menu extends JFrame {
         
         sucController = new SucursalController(this, rc, gestor,
                         tabla, tablaPersonas, modeloTabla, modeloPersonas,
-                        btnCargar, btnPersonas, btnGuardar);
+                        btnCargar, btnPersonas, btnGuardar, btnCertificados);
         
         sucController.conectarVistaControlador();
         

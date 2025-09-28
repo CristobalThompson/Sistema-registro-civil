@@ -23,13 +23,13 @@ public class SucursalController {
     private final SucursalesTableModel modeloSucursales;
     private final PersonasTableModel modeloPersonas;
     
-    private final JButton btnSucursales, btnPersonas, btnGuardar;
+    private final JButton btnSucursales, btnPersonas, btnGuardar, btnCertificados;
 
     public SucursalController(JFrame padre, 
             RegistroCivil rc, GestorCSV gestor, JTable tablaSucursales, 
             JTable tablaPersonas, SucursalesTableModel modeloSucursales, 
             PersonasTableModel modeloPersonas, JButton btnSucursales, 
-            JButton btnPersonas, JButton btnGuardar) {
+            JButton btnPersonas, JButton btnGuardar, JButton btnCertificados) {
         this.padre = padre;
         this.rc = rc;
         this.gestor = gestor;
@@ -39,6 +39,7 @@ public class SucursalController {
         this.modeloPersonas = modeloPersonas;
         this.btnSucursales = btnSucursales;
         this.btnPersonas = btnPersonas;
+        this.btnCertificados = btnCertificados;
         this.btnGuardar = btnGuardar;
         datosCargadosP = false;
         datosCargadosS = false;
@@ -52,6 +53,7 @@ public class SucursalController {
         
         btnSucursales.addActionListener(e -> abrirSubmenuSucursales());
         btnPersonas.addActionListener(e -> abrirSubMenuPersonas());
+        btnCertificados.addActionListener(e -> abrirSubmenuCertificados());
         btnGuardar.addActionListener(e -> abrirSubMenuGuardar());
     }
     
@@ -265,7 +267,78 @@ public class SucursalController {
     }
     
     private void emitirCertificadoUI(){
+        JTextField campoRut = new JTextField(20);
         
+        JComboBox<String> opciones = new JComboBox<>(new String[]{
+        "Nacimiento", "Matrimonio", "Defusión"});
+        
+        JPanel panel = new JPanel(new GridLayout(0, 2, 6, 6));
+        panel.add(new JLabel("rut de la persona:"));
+        panel.add(campoRut);
+        
+        panel.add(new JLabel("Tipo de certificado:"));
+        panel.add(opciones);
+        
+        int confirmacion = JOptionPane.showConfirmDialog(padre, panel, 
+                "Emitir certificado", JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE);
+        
+        if (confirmacion != JOptionPane.OK_OPTION) return;
+        
+        String rut = campoRut.getText().trim();
+        
+        if (rut.isEmpty()){
+            JOptionPane.showMessageDialog(padre, "RUT es obligatorio.",
+                "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        if (!rc.validarRut(rut)){
+            JOptionPane.showMessageDialog(padre, "RUT no registrado",
+                "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        Archivo arc = null;
+        
+        for (int i = 0; i < rc.getTotalClaves(); ++i){
+            Sucursal suc = rc.getSucursal(i);
+            if (suc == null) continue;
+            arc = suc.getArchivo(rut);
+            if (arc != null) break;
+        }
+        
+        String tipo = (String) opciones.getSelectedItem();
+        
+        switch(tipo){
+            case "Nacimiento" :
+                Certificado cerNaci = arc.generarNacimiento();
+                rc.agregarCertificado(cerNaci);
+                break;
+            case "Defusión" :
+                Certificado cerFalle = arc.generarDefusion();
+                if (cerFalle == null){
+                    JOptionPane.showMessageDialog(padre, 
+                            "La persona aun no fallece",
+                    "Aviso", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+                rc.agregarCertificado(cerFalle);
+                break;
+            case "Matrimonio" :
+                Certificado cerMatri = arc.generarMatrimonio();
+                if (cerMatri == null){
+                    JOptionPane.showMessageDialog(padre, 
+                            "La persona aun no se casa",
+                    "Aviso", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+                rc.agregarCertificado(cerMatri);
+                break;
+            default :
+                JOptionPane.showMessageDialog(padre, 
+                            "Ocurrio un error",
+                    "Aviso", JOptionPane.WARNING_MESSAGE);   
+        }
     }
     
     private void listarCertificadosUI(){
@@ -279,14 +352,12 @@ public class SucursalController {
         jdl.setLocationRelativeTo(padre);
         
         JButton btnCsv = new JButton("Cargar personas vía CSV (cargar sucursales primero)");
-        JButton btnCertificados = new JButton("Administrar Certificados");
         JButton btnAgregar = new JButton("Agregar nueva persona");
         JButton btnModificar = new JButton("Modificar persona existente");
         JButton btnEliminar = new JButton("Eliminar persona");
         JButton btnCerrar = new JButton("Cerrar");
         
         jdl.add(btnCsv);
-        jdl.add(btnCertificados);
         jdl.add(btnAgregar);
         jdl.add(btnModificar);
         jdl.add(btnEliminar);
@@ -300,17 +371,6 @@ public class SucursalController {
                 jdl.dispose();
             }catch(IOException ex){
                 JOptionPane.showMessageDialog(padre, "No se pudo cargar las personas");
-            }
-        });
-        
-        btnCertificados.addActionListener(ev ->{
-            if (rc.getTotalPersonas() == 0){
-                JOptionPane.showMessageDialog(padre, 
-                        "No hay personas para administrar Personas", 
-                    "Aviso", JOptionPane.WARNING_MESSAGE);
-            }
-            else{
-                abrirSubmenuCertificados();
             }
         });
         
@@ -456,7 +516,7 @@ public class SucursalController {
     }
     
     private void modificarPersonaSwing(){
-        
+        //casarse o declarar fallecido
     }
     
     private void eliminarPersonaSwing(){
@@ -524,11 +584,13 @@ public class SucursalController {
         jdl.setSize(390, 200);
         jdl.setLocationRelativeTo(padre);
         
-        JButton guarSucCsv = new JButton("guardar datos de sucursales en CSV");
-        JButton guarPerCsv = new JButton("guardar datos de personas en CSV");
+        JButton guarSucCsv = new JButton("Guardar datos de sucursales en CSV");
+        JButton guarPerCsv = new JButton("Guardar datos de personas en CSV");
+        JButton guarCerCsv = new JButton("Guardar datos de certificados en CSV");
         
         jdl.add(guarSucCsv);
         jdl.add(guarPerCsv);
+        jdl.add(guarCerCsv);
         
         guarSucCsv.addActionListener(e -> {
             try{
@@ -551,6 +613,18 @@ public class SucursalController {
             }catch(IOException ex){
                 JOptionPane.showMessageDialog(padre, 
                         "No se pudo guardar los datos de las personas",
+                    "Aviso", JOptionPane.WARNING_MESSAGE);
+            }
+        });
+        
+        guarCerCsv.addActionListener(e ->{
+            try{
+                gestor.guardarCertificados(rc);
+                JOptionPane.showMessageDialog(padre, 
+                        "datos de certificados guardados con exito");
+            }catch(IOException ex){
+                JOptionPane.showMessageDialog(padre, 
+                        "No se pudo guardar los datos de los certificados",
                     "Aviso", JOptionPane.WARNING_MESSAGE);
             }
         });

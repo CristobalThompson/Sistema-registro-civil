@@ -21,6 +21,7 @@ public class RegistroCivil {
     private HashMap<String, Persona> listaPersonas = new HashMap<>();
     private ArrayList<String> clavesSucursales = new ArrayList<>();
     private ArrayList<String> rutsPersonas = new ArrayList<>();
+    private ArrayList<Certificado> certificados = new ArrayList<>();
 
     
     public int getTotalClaves(){
@@ -31,6 +32,10 @@ public class RegistroCivil {
         return listaPersonas.size();
     }
     
+    public int getTotalCertificados(){
+        return certificados.size();
+    }
+    
     public Sucursal getSucursal(String key){
         return sucursales.get(key);
     }
@@ -38,6 +43,10 @@ public class RegistroCivil {
     //sobreCarga
     public Sucursal getSucursal(int i){
         return sucursales.get(getClave(i));
+    }
+    
+    public Certificado getCertificado(int i){
+        return certificados.get(i);
     }
     
     public Persona getPersona(int i){
@@ -128,5 +137,9 @@ public class RegistroCivil {
 
     public void leerDatos(Persona persona, String nombreSucursal) {
         nacimiento(persona, nombreSucursal);
+    }
+    
+    public void agregarCertificado(Certificado certi){
+        certificados.add(certi);
     }
 }

@@ -1,41 +1,41 @@
-﻿rut,nombre,año,mes,dia,nombre sucursal
-12345678-9,Ana Rojas,1998,3,12,Registro Civil Lo Barnechea
-11111111-1,Benjamín Pérez,1999,7,4,Registro Civil Lo Barnechea
-13456789-0,Camila Soto,2001,10,23,Registro Civil Talca
-14789123-4,Diego Hernández,1995,1,14,Registro Civil Talca
-15234567-8,Emilia Vargas,2000,5,30,Registro Civil Concepción
-21234543-k,Matias Gonzalez,2005,5,17,Registro Civil Concepción
-19623087-4,Mauricio Ramírez,1950,11,20,Registro Civil Puerto Montt
-16345678-5,Francisco Muñoz,1997,12,2,Registro Civil Puerto Montt
-17456789-3,Gabriela Silva,1994,2,19,Registro Civil Valdivia
-20899000-1,Felipe toto Valenzuela,2004,11,5,Registro Civil Valdivia
-18567890-k,Hugo Castillo,2002,6,7,Registro Civil Rancagua
-22234567-1,Alex lynel Reyes,2006,4,21,Registro Civil Rancagua
-19678901-1,Isidora Fuentes,1993,9,9,Registro Civil Viña del Mar
-21977036-7,Francisca panchi Jorquera,2005,11,8,Registro Civil Viña del Mar
-20789012-0,Joaquín Reyes,1996,4,25,Registro Civil Antofagasta
-22901234-8,Luis Torres,2001,8,18,Registro Civil Antofagasta
-23012345-7,Martina Navarro,1992,3,5,Registro Civil Arica
-24123456-6,Nicolás Araya,1999,7,28,Registro Civil Arica
-25234567-5,Olivia Contreras,1997,1,17,Registro Civil Iquique
-10871380-1,Francisco González,1972,7,7,Registro Civil Iquique
-27912458-8,Sebastián Martínez,1962,12,6,Registro Civil Chillán
-22951407-5,Tomás Pérez,2004,11,29,Registro Civil Chillán
-20422481-1,Matías Rojas,1999,2,17,Registro Civil Osorno
-28612788-6,Ricardo Espinoza,1968,4,21,Registro Civil Osorno
-29174470-2,Hernán Gutiérrez,1992,6,2,Registro Civil Coyhaique
-27224641-6,Javiera Ramírez,1969,2,22,Registro Civil Coyhaique
-21571136-6,Nicolás Ramírez,1978,7,10,Registro Civil Punta Arenas
-27074158-4,Constanza Muñoz,1981,6,7,Registro Civil Punta Arenas
-19363751-5,Sebastián Silva,1963,7,17,Registro Civil La Serena
-20227090-5,Ricardo Espinoza,1981,1,22,Registro Civil La Serena
-19341269-6,Ignacio Ramírez,1997,6,7,Registro Civil Copiapó
-15625649-8,Camila Gutiérrez,2001,7,7,Registro Civil Copiapó
-24812098-3,Daniela Silva,1973,2,17,Registro Civil San Fernando
-28867134-6,Claudia González,1966,10,29,Registro Civil San Fernando
-13001148-9,Matías Contreras,1993,3,20,Registro Civil Linares
-11878047-7,Sebastián Vargas,1990,5,19,Registro Civil Linares
-14756156-3,Daniela Herrera,1964,7,23,Registro Civil Temuco
-20178272-4,Felipe Contreras,1964,11,30,Registro Civil Temuco
-27864589-4,Rodrigo Silva,2003,12,7,Registro Civil Quilpué
-25303714-8,Carolina Reyes,1963,6,2,Registro Civil Quilpué
+Rut,Nombre,Año,Mes,Dia,nombre sucursal,estado civil
+12345678-9,Ana Rojas,1998,3,12,Registro Civil Lo Barnechea,Soltero/a
+11111111-1,Benjamín Pérez,1999,7,4,Registro Civil Lo Barnechea,Soltero/a
+13456789-0,Camila Soto,2001,10,23,Registro Civil Talca,Soltero/a
+14789123-4,Diego Hernández,1995,1,14,Registro Civil Talca,Soltero/a
+15234567-8,Emilia Vargas,2000,5,30,Registro Civil Concepción,Soltero/a
+21234543-k,Matias Gonzalez,2005,5,17,Registro Civil Concepción,Soltero/a
+19623087-4,Mauricio Ramírez,1950,11,20,Registro Civil Puerto Montt,Soltero/a
+16345678-5,Francisco Muñoz,1997,12,2,Registro Civil Puerto Montt,Soltero/a
+17456789-3,Gabriela Silva,1994,2,19,Registro Civil Valdivia,Soltero/a
+20899000-1,Felipe toto Valenzuela,2004,11,5,Registro Civil Valdivia,Soltero/a
+18567890-k,Hugo Castillo,2002,6,7,Registro Civil Rancagua,Soltero/a
+22234567-1,Alex lynel Reyes,2006,4,21,Registro Civil Rancagua,Soltero/a
+19678901-1,Isidora Fuentes,1993,9,9,Registro Civil Viña del Mar,Soltero/a
+21977036-7,Francisca panchi Jorquera,2005,11,8,Registro Civil Viña del Mar,Soltero/a
+20789012-0,Joaquín Reyes,1996,4,25,Registro Civil Antofagasta,Soltero/a
+22901234-8,Luis Torres,2001,8,18,Registro Civil Antofagasta,Soltero/a
+23012345-7,Martina Navarro,1992,3,5,Registro Civil Arica,Soltero/a
+24123456-6,Nicolás Araya,1999,7,28,Registro Civil Arica,Soltero/a
+25234567-5,Olivia Contreras,1997,1,17,Registro Civil Iquique,Soltero/a
+10871380-1,Francisco González,1972,7,7,Registro Civil Iquique,Soltero/a
+27912458-8,Sebastián Martínez,1962,12,6,Registro Civil Chillán,Soltero/a
+22951407-5,Tomás Pérez,2004,11,29,Registro Civil Chillán,Soltero/a
+20422481-1,Matías Rojas,1999,2,17,Registro Civil Osorno,Soltero/a
+28612788-6,Ricardo Espinoza,1968,4,21,Registro Civil Osorno,Soltero/a
+29174470-2,Hernán Gutiérrez,1992,6,2,Registro Civil Coyhaique,Soltero/a
+27224641-6,Javiera Ramírez,1969,2,22,Registro Civil Coyhaique,Soltero/a
+21571136-6,Nicolás Ramírez,1978,7,10,Registro Civil Punta Arenas,Soltero/a
+27074158-4,Constanza Muñoz,1981,6,7,Registro Civil Punta Arenas,Soltero/a
+19363751-5,Sebastián Silva,1963,7,17,Registro Civil La Serena,Soltero/a
+20227090-5,Ricardo Espinoza,1981,1,22,Registro Civil La Serena,Soltero/a
+19341269-6,Ignacio Ramírez,1997,6,7,Registro Civil Copiapó,Soltero/a
+15625649-8,Camila Gutiérrez,2001,7,7,Registro Civil Copiapó,Soltero/a
+24812098-3,Daniela Silva,1973,2,17,Registro Civil San Fernando,Soltero/a
+28867134-6,Claudia González,1966,10,29,Registro Civil San Fernando,Soltero/a
+13001148-9,Matías Contreras,1993,3,20,Registro Civil Linares,Soltero/a
+11878047-7,Sebastián Vargas,1990,5,19,Registro Civil Linares,Soltero/a
+14756156-3,Daniela Herrera,1964,7,23,Registro Civil Temuco,Soltero/a
+20178272-4,Felipe Contreras,1964,11,30,Registro Civil Temuco,Soltero/a
+27864589-4,Rodrigo Silva,2003,12,7,Registro Civil Quilpué,Soltero/a
+25303714-8,Carolina Reyes,1963,6,2,Registro Civil Quilpué,Soltero/a

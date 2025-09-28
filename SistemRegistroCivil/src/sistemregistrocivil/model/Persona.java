@@ -13,7 +13,6 @@ public class Persona {
     private String rut = null;
     private String nombre;
     private Fecha fechaNacimiento = null;
-    private boolean estadoPersona = true;
     private String estadoCivil;
     private Fecha defuncion = null;
     
@@ -40,10 +39,6 @@ public class Persona {
         return true;
     }
     
-    public void setEstado(boolean estado){
-        estadoPersona = estado;
-    }
-    
     public boolean setEstadoCivil(String estado){
         if (estado == null) return false;
         estadoCivil = estado;
@@ -53,7 +48,6 @@ public class Persona {
     public boolean setFechaDefuncion(Fecha fd){
         if (fd == null || defuncion != null) return false; //fallecimiento no se cambia
         defuncion = fd;
-        estadoPersona = false;
         return true;
     }
     
@@ -67,10 +61,6 @@ public class Persona {
     
     public Fecha getNacimiento(){
         return fechaNacimiento;
-    }
-    
-    public boolean getEstado(){
-    return estadoPersona;
     }
     
     public String getCivil(){

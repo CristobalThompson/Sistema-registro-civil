@@ -2,72 +2,43 @@ package sistemregistrocivil.model;
 
 import sistemregistrocivil.model.Archivo;
 import sistemregistrocivil.model.Persona;
+import java.time.LocalDate;
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 
-/**
- *
- * @author crist
- */
-public class Certificado {
-    private Persona persona;
-    private Archivo conyuge;
-    private Fecha fechaCasamiento;
-    private byte tipoCertificado;
+public abstract class Certificado {
     private String nombreCertificado;
+    private String nombrePersona;
+    private String rut;
+    private Fecha emision;
     
-    public boolean setPersona(Persona p){
-        if (p == null) return false;
-        persona = p;
-        return true;
+    public Certificado(String nombre, String nombrePer, String rut){
+        nombreCertificado = nombre;
+        nombrePersona = nombrePer;
+        this.rut = rut;
+        LocalDate fechaActual = LocalDate.now();
+        emision = new Fecha(fechaActual.getDayOfMonth(), fechaActual.getMonthValue(),
+        fechaActual.getYear());
     }
     
-    public boolean setFechaC(Fecha fc){
-        if(fc == null) return false;
-        fechaCasamiento = fc;
-        return true;
+    public void setEmision(Fecha emi){
+        emision = emi;
     }
-    
-    public boolean setConyuge(Archivo c){
-        if (c == null) return false;
-        
-        conyuge = c;
-        return true;
+
+    public Fecha getEmision() {
+        return emision;
     }
     
     public String getNombreCertificado(){
         return nombreCertificado;
     }
     
-    public boolean crearCertificado(byte opcion){
-        tipoCertificado = opcion;
-        if (opcion == 1)
-            nombreCertificado = "Certificado de matrimonio";
-        else if (opcion == 2)
-            nombreCertificado = "Certificado de nacimiento";
-        else nombreCertificado = "Certificado de difusión";
-        return true;
+    public String getNombrePersona(){
+        return nombrePersona;
     }
     
-    public void mostrarCertificado(){
-        if (tipoCertificado == 1) mostrarMatrimonio();
-        else if (tipoCertificado == 2) mostrarNacimiento();
-        else mostrarDifusion();
+    public String getRut(){
+        return rut;
     }
     
-    private void mostrarMatrimonio(){
-        System.out.println("matrimonio"); //pendiente
-    }
-    
-    private void mostrarNacimiento(){
-        System.out.println("nacimiento"); //pendiente
-    }
-    
-    private void mostrarDifusion(){
-        System.out.println("Difusión"); //pendiente
-    }
-    
+    public abstract String generarLinea();
 }
