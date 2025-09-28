@@ -180,7 +180,13 @@ public class SucursalController {
             modeloPersonas.setSucursal(null);
         });
         
-        btnBuscar.addActionListener(ev -> buscarSucursalSwing());
+        btnBuscar.addActionListener(ev -> {
+            if (rc.getTotalClaves() == 0){
+                JOptionPane.showMessageDialog(padre, "No hay sucursales para buscar", 
+                    "Aviso", JOptionPane.WARNING_MESSAGE);
+            }
+            else buscarSucursalSwing();
+                });
         
         btnEliminar.addActionListener(ev ->{
             if (rc.getTotalClaves() == 0){
