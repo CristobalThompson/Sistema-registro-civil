@@ -1,14 +1,27 @@
 package sistemregistrocivil.model;
 
-
+/**
+ * Certificado de defunción dentro del sistema.
+ * Incluye datos y operaciones asociadas al documento.
+ */
 public class CertificadoDefusion extends Certificado{
     private final Fecha fallecimiento;
     
+    /**
+     * Crea una instancia de CertificadoDefusion.
+     * @param nombre parámetro de entrada.
+     * @param rut parámetro de entrada.
+     * @param falle parámetro de entrada.
+     */
     public CertificadoDefusion(String nombre, String rut, Fecha falle) {
         super("Certificado de defusión", nombre, rut);
         fallecimiento = falle;
     }
-
+    
+    /**
+     * Emite o genera el certificado correspondiente.
+     * @return valor resultante de la operación.
+     */
     @Override
     public String generarLinea() {
         String nombreCerti = getNombreCertificado();
@@ -36,6 +49,10 @@ public class CertificadoDefusion extends Certificado{
                 añoE;
     }
     
+    /**
+     * Obtiene defucion.
+     * @return valor resultante de la operación.
+     */
     public Fecha getDefucion(){
         return fallecimiento;
     }

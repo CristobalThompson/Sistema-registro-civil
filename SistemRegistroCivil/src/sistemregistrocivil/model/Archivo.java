@@ -1,19 +1,12 @@
 package sistemregistrocivil.model;
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
-/**
- *
- * @author crist
- */
-
 import sistemregistrocivil.model.Persona;
 import sistemregistrocivil.model.Ubicacion;
 import sistemregistrocivil.model.Sucursal;
 
+/**
+ * Clase principal del módulo Archivo.
+ */
 public class Archivo {
     private Persona persona;
     private Ubicacion direccion;
@@ -22,6 +15,11 @@ public class Archivo {
     private Archivo conyuge;
     
     //----------------setters-------------------
+    /**
+     * Asigna fecha casamiento.
+     * @param fc parámetro de entrada.
+     * @return valor resultante de la operación.
+     */
     public boolean setFechaCasamiento(Fecha fc){
         if (fc == null) return false;
         
@@ -29,24 +27,44 @@ public class Archivo {
         return true;
     }
     
+    /**
+     * Asigna persona.
+     * @param p parámetro de entrada.
+     * @return valor resultante de la operación.
+     */
     public boolean setPersona(Persona p){
         if (p == null) return false;
         persona = p;
         return true;
     }
     
+    /**
+     * Asigna ubicacion.
+     * @param direccion parámetro de entrada.
+     * @return valor resultante de la operación.
+     */
     public boolean setUbicacion(Ubicacion direccion){
         if (direccion == null) return false;
         this.direccion = direccion;
         return true;
     }
     
+    /**
+     * Asigna sucursal.
+     * @param sucur parámetro de entrada.
+     * @return valor resultante de la operación.
+     */
     public boolean setSucursal(Sucursal sucur){
         if(sucur == null) return false;
         sucursal = sucur;
         return true;
     }
     
+    /**
+     * Asigna conyuge.
+     * @param conyuge parámetro de entrada.
+     * @return valor resultante de la operación.
+     */
     public boolean setConyuge(Archivo conyuge){
         if (conyuge == null) return false;
         if (conyuge.getPersona() == null) return false;
@@ -57,27 +75,51 @@ public class Archivo {
     //------------------------------------------
     
     //----------------getters-------------------
+    /**
+     * Obtiene fecha casamiento.
+     * @return valor resultante de la operación.
+     */
     public Fecha getFechaCasamiento(){
         return fechaCasamiento;
     }
     
+    /**
+     * Obtiene persona.
+     * @return valor resultante de la operación.
+     */
     public Persona getPersona(){
         return persona;
     }
     
+    /**
+     * Obtiene conyuge.
+     * @return valor resultante de la operación.
+     */
     public Archivo getConyuge(){
         return conyuge;
     }
     
+    /**
+     * Obtiene ubicacion.
+     * @return valor resultante de la operación.
+     */
     public Ubicacion getUbicacion(){
         return direccion;
     }
     
+    /**
+     * Obtiene sucursal.
+     * @return valor resultante de la operación.
+     */
     public Sucursal getSucursal(){
         return sucursal;
     }
     //-----------------------------------------
     
+    /**
+     * Realiza la operación «esCasado».
+     * @return valor resultante de la operación.
+     */
     private boolean esCasado(){
         if (persona.getCivil() == null) return false;
         if ((persona.getCivil()).equals("Casado/a")) return true;
@@ -86,6 +128,12 @@ public class Archivo {
         
     }
     
+    /**
+     * Realiza la operación «casarse».
+     * @param pp parámetro de entrada.
+     * @param ff parámetro de entrada.
+     * @return valor resultante de la operación.
+     */
     public boolean casarse(Archivo pp, Fecha ff){
         
         if (pp == null || ff == null){ //verificar parametros sean utiles
@@ -123,6 +171,10 @@ public class Archivo {
         return true;
     }
     
+    /**
+     * Realiza la operación «divorcio».
+     * @return valor resultante de la operación.
+     */
     public boolean divorcio(){
      
         Archivo otro = this.conyuge;
@@ -149,6 +201,11 @@ public class Archivo {
         return true;
     }
     
+    /**
+     * Realiza la operación «fallecimiento».
+     * @param ff parámetro de entrada.
+     * @return valor resultante de la operación.
+     */
     public boolean fallecimiento(Fecha ff){
         if ("Fallecido/a".equalsIgnoreCase(persona.getCivil())) return false;
         persona.setEstadoCivil("Fallecido/a");
@@ -167,18 +224,30 @@ public class Archivo {
         return true;
     }
     
+    /**
+     * Realiza la operación «generarNacimiento».
+     * @return valor resultante de la operación.
+     */
     public CertificadoNacimiento generarNacimiento(){
         return new 
             CertificadoNacimiento(persona.getNombre(),
             persona.getRut(), persona.getNacimiento());
     }
     
+     /**
+     * Realiza la operación «generarMatrimonio».
+     * @return valor resultante de la operación.
+     */
     public CertificadoMatrimonio generarMatrimonio(){
         if (fechaCasamiento  == null || conyuge == null) return null;
         return new CertificadoMatrimonio(persona.getNombre(), persona.getRut(), 
         conyuge.getPersona().getNombre(), conyuge.getPersona().getRut(), fechaCasamiento);
     }
     
+    /**
+     * Realiza la operación «generarDefusion».
+     * @return valor resultante de la operación.
+     */
     public CertificadoDefusion generarDefusion(){
         if (persona.getDefuncion() == null) return null;
         return new CertificadoDefusion(persona.getNombre(), persona.getRut(), 
